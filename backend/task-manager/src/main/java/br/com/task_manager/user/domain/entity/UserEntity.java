@@ -1,5 +1,7 @@
 package br.com.task_manager.user.domain.entity;
 
+import br.com.task_manager.user.domain.valueobject.UserRole;
+
 import java.time.LocalDateTime;
 
 public class UserEntity {
@@ -7,6 +9,7 @@ public class UserEntity {
     private String username;
     private String email;
     private String password;
+    private UserRole role;
     private LocalDateTime createdAt;
 
     public UserEntity(Long id, String username, String email, String password, LocalDateTime createdAt) {
@@ -48,6 +51,14 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     public LocalDateTime getCreatedAt() {

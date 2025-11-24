@@ -1,5 +1,6 @@
 package br.com.task_manager.user.infrastructure.entity;
 
+import br.com.task_manager.user.domain.valueobject.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 public class UserJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +23,7 @@ public class UserJpaEntity {
     @Column(unique = true)
     private String email;
     private String password;
+    private UserRole role;
     @Column(name = "dh_creation")
     private LocalDateTime createdAt;
 }
