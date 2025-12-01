@@ -15,10 +15,7 @@ public class UserEntity {
     public UserEntity(Long id, String username, String email, String password, LocalDateTime createdAt) {
     }
 
-    public UserEntity(Long id, String username, String email, String password) {
-    }
-
-    public UserEntity(String username, String email, String password) {
+    public UserEntity(String username, String email, String password, UserRole role) {
     }
 
     public Long getId() {

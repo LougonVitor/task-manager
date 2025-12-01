@@ -4,6 +4,7 @@ import br.com.task_manager.user.application.dto.CreateUserCommand;
 import br.com.task_manager.user.application.dto.UserServiceResponseDto;
 import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.repository.IUserRepository;
+import br.com.task_manager.user.domain.valueobject.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ public class UserService {
     private IUserRepository userRepository;
 
     public UserServiceResponseDto createUser (CreateUserCommand requestDto) {
-        UserEntity userEntity = new UserEntity(requestDto.username(),requestDto.email(), requestDto.password());
+        UserEntity userEntity = new UserEntity(requestDto.username(),requestDto.email(), requestDto.password(), UserRole.valueOf(requestDto.role()));
 
         UserEntity createdUser = this.userRepository.createUser(userEntity);
 

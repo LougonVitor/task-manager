@@ -21,6 +21,7 @@ public class UserRepository implements IUserRepository {
         userJpaEntity.setEmail(entity.getEmail());
         userJpaEntity.setPassword(entity.getPassword());
         userJpaEntity.setCreatedAt(LocalDateTime.now());
+        userJpaEntity.setRole(entity.getRole().getRole());
 
         UserJpaEntity createdUser = this.userJpaRepository.save(userJpaEntity);
 

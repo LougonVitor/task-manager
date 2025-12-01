@@ -1,6 +1,5 @@
 package br.com.task_manager.user.infrastructure.entity;
 
-import br.com.task_manager.user.domain.valueobject.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +22,7 @@ public class UserJpaEntity {
     @Column(unique = true)
     private String email;
     private String password;
-    private UserRole role;
+    private String role;
     @Column(name = "dh_creation")
     private LocalDateTime createdAt;
 }
