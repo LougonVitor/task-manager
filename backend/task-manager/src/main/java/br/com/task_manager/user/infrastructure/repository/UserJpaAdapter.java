@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 
 @Repository
-public class UserRepository implements IUserRepository {
+public class UserJpaAdapter implements IUserRepository {
     @Autowired
     private UserJpaRepository userJpaRepository;
 
