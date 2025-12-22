@@ -4,6 +4,7 @@ import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.repository.IUserRepository;
 import br.com.task_manager.user.infrastructure.entity.UserJpaEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -32,5 +33,10 @@ public class UserJpaAdapter implements IUserRepository {
             createdUser.getPassword(),
             createdUser.getCreatedAt()
         );
+    }
+
+    @Override
+    public UserEntity findByUsername(String username) {
+        return this.userJpaRepository.findByUsername(username);
     }
 }
