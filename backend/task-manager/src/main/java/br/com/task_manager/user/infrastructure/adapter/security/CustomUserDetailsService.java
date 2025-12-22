@@ -1,5 +1,6 @@
 package br.com.task_manager.user.infrastructure.adapter.security;
 
+import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        UserEntity userEntity = this.userRepository.findByUsername(username);
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(userEntity.get)
+                .password(userEntity.getPassword())
+                .build();
     }
 }
