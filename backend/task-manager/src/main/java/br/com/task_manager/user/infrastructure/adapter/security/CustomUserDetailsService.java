@@ -17,7 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         UserEntity userEntity = this.userRepository.findByUsername(username);
 
         return org.springframework.security.core.userdetails.User
-                .withUsername(userEntity.get)
+                .withUsername(userEntity.getUsername())
                 .password(userEntity.getPassword())
                 .build();
     }
