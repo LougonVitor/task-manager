@@ -1,4 +1,4 @@
-package br.com.task_manager.user.infrastructure.adapter.security;
+package br.com.task_manager.user.infrastructure.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

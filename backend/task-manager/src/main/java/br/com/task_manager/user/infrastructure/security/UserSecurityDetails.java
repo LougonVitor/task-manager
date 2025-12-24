@@ -1,4 +1,4 @@
-package br.com.task_manager.user.infrastructure.adapter.security;
+package br.com.task_manager.user.infrastructure.security;
 
 import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.valueobject.UserRole;
