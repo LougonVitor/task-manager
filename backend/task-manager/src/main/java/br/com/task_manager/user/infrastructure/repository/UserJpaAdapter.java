@@ -2,6 +2,7 @@ package br.com.task_manager.user.infrastructure.repository;
 
 import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.repository.IUserRepository;
+import br.com.task_manager.user.domain.valueobject.UserRole;
 import br.com.task_manager.user.infrastructure.entity.UserJpaEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +32,7 @@ public class UserJpaAdapter implements IUserRepository {
             createdUser.getUsername(),
             createdUser.getEmail(),
             createdUser.getPassword(),
+            UserRole.getEnumValue(createdUser.getRole()),
             createdUser.getCreatedAt()
         );
     }
