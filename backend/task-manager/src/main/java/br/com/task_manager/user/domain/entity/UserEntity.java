@@ -12,10 +12,20 @@ public class UserEntity {
     private UserRole role;
     private LocalDateTime createdAt;
 
-    public UserEntity(Long id, String username, String email, String password, LocalDateTime createdAt) {
+    public UserEntity(Long id, String username, String email, String password, UserRole role, LocalDateTime createdAt) {
+        this.setId(id);
+        this.setUsername(username);
+        this.setEmail(email);
+        this.setPassword(password);
+        this.setRole(role);
+        this.setCreatedAt(createdAt);
     }
 
     public UserEntity(String username, String email, String password, UserRole role) {
+        this.setUsername(username);
+        this.setEmail(email);
+        this.setPassword(password);
+        this.setRole(role);
     }
 
     public Long getId() {
