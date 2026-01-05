@@ -39,6 +39,17 @@ public class UserJpaAdapter implements IUserRepository {
 
     @Override
     public UserEntity findByUsername(String username) {
-        return this.userJpaRepository.findByUsername(username);
+        UserJpaEntity userJpaEntity = this.userJpaRepository.findByUsername(username);
+
+        if(userJpaEntity == null) return null;
+
+        return new UserEntity(
+                userJpaEntity.getId(),
+                userJpaEntity.getUsername(),
+                userJpaEntity.getEmail(),
+                userJpaEntity.getPassword(),
+                UserRole.getEnumValue(userJpaEntity.getRole()),
+                userJpaEntity.getCreatedAt()
+        );
     }
 }
