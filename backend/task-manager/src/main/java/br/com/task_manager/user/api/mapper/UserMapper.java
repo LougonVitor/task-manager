@@ -1,7 +1,7 @@
 package br.com.task_manager.user.api.mapper;
 
 import br.com.task_manager.user.api.dto.UserRequestDto;
-import br.com.task_manager.user.application.dto.CreateUserCommand;
+import br.com.task_manager.user.application.dto.auth.CreateUserCommand;
 import br.com.task_manager.user.api.dto.UserResponseDto;
 import br.com.task_manager.user.application.dto.UserServiceResponseDto;
 import org.springframework.stereotype.Component;
