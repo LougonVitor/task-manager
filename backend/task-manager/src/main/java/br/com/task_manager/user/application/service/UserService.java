@@ -1,6 +1,6 @@
 package br.com.task_manager.user.application.service;
 
-import br.com.task_manager.user.application.dto.CreateUserCommand;
+import br.com.task_manager.user.application.dto.auth.CreateUserCommand;
 import br.com.task_manager.user.application.dto.UserServiceResponseDto;
 import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.repository.IUserRepository;
