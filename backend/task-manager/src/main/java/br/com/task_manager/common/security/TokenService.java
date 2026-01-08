@@ -1,4 +1,4 @@
-package br.com.task_manager.user.infrastructure.security;
+package br.com.task_manager.common.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

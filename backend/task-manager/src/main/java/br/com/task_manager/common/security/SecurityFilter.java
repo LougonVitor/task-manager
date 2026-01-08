@@ -1,4 +1,4 @@
-package br.com.task_manager.user.infrastructure.security;
+package br.com.task_manager.common.security;
 
 import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.repository.IUserRepository;

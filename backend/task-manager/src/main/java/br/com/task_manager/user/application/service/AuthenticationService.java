@@ -5,7 +5,7 @@ import br.com.task_manager.user.application.dto.auth.AuthenticationUserCommand;
 import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.repository.IUserRepository;
 import br.com.task_manager.user.domain.valueobject.UserRole;
-import br.com.task_manager.user.infrastructure.security.TokenService;
+import br.com.task_manager.common.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
