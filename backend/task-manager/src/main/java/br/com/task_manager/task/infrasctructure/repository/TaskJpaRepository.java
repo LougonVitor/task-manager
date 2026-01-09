@@ -12,7 +12,7 @@ public class TaskJpaRepository implements ITaskRepository {
     private ITaskJpaRepository taskJpaRepository;
 
     @Override
-    public Long createTask(TaskEntity entity) {
+    public TaskEntity createTask(TaskEntity entity) {
         TaskJpaEntity jpaEntity = new TaskJpaEntity(
                 entity.getId(),
                 entity.getTitle(),
@@ -23,6 +23,16 @@ public class TaskJpaRepository implements ITaskRepository {
                 entity.getCompletedAt()
         );
 
-        return this.taskJpaRepository.save(jpaEntity).getId();
+        TaskJpaEntity dbEntityCreated = this.taskJpaRepository.save(jpaEntity);
+
+        return new TaskEntity(
+                dbEntityCreated.getId(),
+                dbEntityCreated.getTitle(),
+                dbEntityCreated.getDescription(),
+                dbEntityCreated.getTaskStatus(),
+                dbEntityCreated.getCreatedAt(),
+                dbEntityCreated.getDeadline(),
+                dbEntityCreated.getCompletedAt()
+        );
     }
 }
