@@ -20,7 +20,7 @@ public class TaskService {
 
         taskEntity.setTitle(request.title());
         taskEntity.setDescription(request.description());
-        taskEntity.setTaskStatus(TaskStatus.getEnumValue(request.status()));
+        taskEntity.setTaskStatus(TaskStatus.getEnumValue(request.status().toUpperCase()));
         taskEntity.setCreatedAt(LocalDateTime.now());
         taskEntity.setDeadline(request.deadline());
 
