@@ -7,6 +7,7 @@ import br.com.task_manager.task.application.dto.CreateResponseTaskCommand;
 import br.com.task_manager.task.application.dto.CreateTaskCommand;
 import br.com.task_manager.task.application.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @PostMapping("/create")
     public TaskResponseDto createTask(@RequestBody TaskRequestDto request) {
         CreateTaskCommand taskCommand = new CreateTaskCommand(request.title(), request.description(), request.status(), request.deadline());
 
