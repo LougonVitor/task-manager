@@ -1,6 +1,9 @@
 package br.com.task_manager.task.api.controller;
 
 import br.com.task_manager.task.api.dto.TaskRequestDto;
+import br.com.task_manager.task.api.dto.TaskResponseDto;
+import br.com.task_manager.task.api.mapper.TaskMapper;
+import br.com.task_manager.task.application.dto.CreateResponseTaskCommand;
 import br.com.task_manager.task.application.dto.CreateTaskCommand;
 import br.com.task_manager.task.application.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +17,11 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    public Long createTask(@RequestBody TaskRequestDto request) {
+    public TaskResponseDto createTask(@RequestBody TaskRequestDto request) {
         CreateTaskCommand taskCommand = new CreateTaskCommand(request.title(), request.description(), request.status(), request.deadline());
 
+        CreateResponseTaskCommand response = this.taskService.createTask(taskCommand);
 
-
-        return this.taskService.createTask(taskCommand);
+        return TaskMapper.toTaskResponse(response);
     }
 }
