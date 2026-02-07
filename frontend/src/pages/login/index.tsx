@@ -1,3 +1,4 @@
+import loginImage from '../../assets/login_imgs/login_image.png'; // Add extension
 import './style.css'
 
 export function Login() {
@@ -31,7 +32,7 @@ export function Login() {
 
                     </div>
                     <aside>
-
+                        <img src={loginImage} alt="Test" />
                     </aside>
                 </div>
             </section>
