@@ -1,13 +1,13 @@
 package br.com.task_manager.user.api.mapper;
 
-import br.com.task_manager.user.api.dto.auth.AuthenticationRequestDto;
-import br.com.task_manager.user.api.dto.auth.CreateRequestDto;
-import br.com.task_manager.user.application.dto.auth.CreateUserCommand;
-import br.com.task_manager.user.application.dto.auth.AuthenticationUserCommand;
+import br.com.task_manager.user.api.dto.AuthenticationRequestDto;
+import br.com.task_manager.user.api.dto.CreateRequestDto;
+import br.com.task_manager.user.application.dto.CreateUserCommand;
+import br.com.task_manager.user.application.dto.AuthenticationUserCommand;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthenticationMapper {
+public class UserAuthenticationMapper {
     /**
      * Request Mapper
      * Map the AuthRequestDto from API to AuthenticationUserCommand from APPLICATION

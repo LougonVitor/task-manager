@@ -1,10 +1,10 @@
 package br.com.task_manager.user.api.controller;
 
-import br.com.task_manager.user.api.dto.auth.AuthenticationRequestDto;
-import br.com.task_manager.user.api.dto.auth.CreateRequestDto;
-import br.com.task_manager.user.api.mapper.AuthenticationMapper;
-import br.com.task_manager.user.application.dto.auth.AuthenticationUserCommand;
-import br.com.task_manager.user.application.dto.auth.CreateUserCommand;
+import br.com.task_manager.user.api.dto.AuthenticationRequestDto;
+import br.com.task_manager.user.api.dto.CreateRequestDto;
+import br.com.task_manager.user.api.mapper.UserAuthenticationMapper;
+import br.com.task_manager.user.application.dto.AuthenticationUserCommand;
+import br.com.task_manager.user.application.dto.CreateUserCommand;
 import br.com.task_manager.user.application.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +22,14 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Validated AuthenticationRequestDto request) {
-        AuthenticationUserCommand serviceDto = AuthenticationMapper.toAuthenticationUserCommand(request);
+        AuthenticationUserCommand serviceDto = UserAuthenticationMapper.toAuthenticationUserCommand(request);
         String token = this.authenticationServiceService.loginAuthentication(serviceDto);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Validated CreateRequestDto request) throws Exception{
-        CreateUserCommand createUserCommand = AuthenticationMapper.toCreateUserCommand(request);
+        CreateUserCommand createUserCommand = UserAuthenticationMapper.toCreateUserCommand(request);
         String username = this.authenticationServiceService.createUser(createUserCommand);
         return ResponseEntity.ok(username);
     }
