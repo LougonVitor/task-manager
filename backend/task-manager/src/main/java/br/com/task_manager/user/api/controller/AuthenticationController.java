@@ -6,6 +6,7 @@ import br.com.task_manager.user.api.mapper.UserAuthenticationMapper;
 import br.com.task_manager.user.application.dto.AuthenticationUserCommand;
 import br.com.task_manager.user.application.dto.CreateUserCommand;
 import br.com.task_manager.user.application.service.AuthenticationService;
+import br.com.task_manager.user.application.service.CreateUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +21,9 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationServiceService;
 
+    @Autowired
+    private CreateUserService createUserService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Validated AuthenticationRequestDto request) {
         AuthenticationUserCommand serviceDto = UserAuthenticationMapper.toAuthenticationUserCommand(request);
@@ -30,7 +34,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Validated CreateRequestDto request) throws Exception{
         CreateUserCommand createUserCommand = UserAuthenticationMapper.toCreateUserCommand(request);
-        String username = this.authenticationServiceService.createUser(createUserCommand);
+        String username = this.createUserService.createUser(createUserCommand);
         return ResponseEntity.ok(username);
     }
 }
