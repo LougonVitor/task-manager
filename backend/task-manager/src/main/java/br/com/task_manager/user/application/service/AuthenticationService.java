@@ -16,15 +16,15 @@ public class AuthenticationService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public String loginAuthentication(AuthenticationUserCommand data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
+    public String loginAuthentication(AuthenticationUserCommand command) {
+        return authenticateCommand(command);
+    }
+
+    private String authenticateCommand(AuthenticationUserCommand command) {
+        var usernamePassword = new UsernamePasswordAuthenticationToken(command.username(), command.password());
 
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        String token =  this.tokenService.generateToken((User) auth.getPrincipal());
-
-        System.out.println(token);
-
-        return token;
+        return this.tokenService.generateToken((User) auth.getPrincipal());
     }
 }
