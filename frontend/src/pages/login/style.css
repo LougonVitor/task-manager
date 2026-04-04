@@ -76,7 +76,8 @@
     margin: 0;
     justify-content: center;
     color: var(--lighter-color);
-    font-weight: bolder;
+    font-weight: 400;
+    font-size: .9rem;
 }
 
 .create-account-button:hover {
@@ -89,8 +90,8 @@
     background-color: transparent;
     border: none;
     color: rgb(173, 173, 173);
-    font-weight: 500;
-    font-size: .8rem;
+    font-weight: 400;
+    font-size: .9rem;
     cursor: pointer;
 }
 
@@ -105,15 +106,15 @@
 
 .line-separator span {
     width: 40%;
-    height: 1px;
+    height: 0.5px;
     border: none;
     background-color: rgb(173, 173, 173);
 }
 
 .line-separator p {
     color: rgb(173, 173, 173);
-    font-size: .6rem;
-    font-weight: 500;
+    font-size: .9rem;
+    font-weight: 400;
 }
 
 aside {

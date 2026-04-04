@@ -3,6 +3,7 @@ package br.com.task_manager.user.api.controller;
 import br.com.task_manager.user.api.dto.AuthenticationRequestDto;
 import br.com.task_manager.user.api.dto.CreateRequestDto;
 import br.com.task_manager.user.api.mapper.UserAuthenticationMapper;
+import br.com.task_manager.user.application.dto.AuthenticationResponse;
 import br.com.task_manager.user.application.dto.AuthenticationUserCommand;
 import br.com.task_manager.user.application.dto.CreateUserCommand;
 import br.com.task_manager.user.application.service.AuthenticationService;
@@ -24,8 +25,8 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Validated AuthenticationRequestDto request) {
         AuthenticationUserCommand serviceDto = UserAuthenticationMapper.toAuthenticationUserCommand(request);
-        String token = this.authenticationServiceService.loginAuthentication(serviceDto);
-        return ResponseEntity.ok(token);
+        AuthenticationResponse response = this.authenticationServiceService.loginAuthentication(serviceDto);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")

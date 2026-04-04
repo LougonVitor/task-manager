@@ -44,13 +44,13 @@ export function Login() {
                                         required
                                     />
                                     <input
-                                        type="text"
+                                        type="email"
                                         className='login-field'
                                         placeholder='Email'
                                         required
                                     />
                                     <input
-                                        type="text"
+                                        type="password"
                                         className='login-field'
                                         placeholder='Password'
                                         onChange={(e) => setPassword(e.target.value)}
@@ -66,7 +66,7 @@ export function Login() {
 
                                 <div className='line-separator'>
                                     <span></span>
-                                    <p>OR</p>
+                                    <p>or</p>
                                     <span></span>
                                 </div>
 
