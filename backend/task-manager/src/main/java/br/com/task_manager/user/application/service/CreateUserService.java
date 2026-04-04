@@ -5,7 +5,9 @@ import br.com.task_manager.user.application.mapper.AuthenticationMapper;
 import br.com.task_manager.user.domain.exception.UserAlreadyExistsException;
 import br.com.task_manager.user.domain.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CreateUserService {
     @Autowired
     private IUserRepository userRepository;
