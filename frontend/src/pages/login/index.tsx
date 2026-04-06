@@ -19,7 +19,7 @@ export function Login() {
                 console.log('Login successful:', data.token);
                 // Handle successful login, e.g., store token, redirect, etc.
                 localStorage.setItem('token', data.token);
-                userNavigate('/Home');
+                userNavigate('/home');
             },
             onError: (error) => {
                 console.error('Login failed:', error.message);

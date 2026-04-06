@@ -13,7 +13,7 @@ function App() {
     <HashRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/Home" element={
+        <Route path="/home" element={
           <ProtectedRoute>
             <Home />
           </ProtectedRoute>}
