@@ -2,6 +2,7 @@ import { useState } from 'react';
 import loginImage from '../../assets/login_imgs/login_image.png'; // Add extension
 import './style.css'
 import { useLoginAuth } from '../../hook/useLoginAuth';
+import { useNavigate } from 'react-router-dom';
 
 export function Login() {
     const {mutate, isPending, isError, error} = useLoginAuth();
@@ -9,12 +10,16 @@ export function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const userNavigate = useNavigate();
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         mutate({ username, password },  {
             onSuccess: (data) => {
                 console.log('Login successful:', data.token);
                 // Handle successful login, e.g., store token, redirect, etc.
+                localStorage.setItem('token', data.token);
+                userNavigate('/Home');
             },
             onError: (error) => {
                 console.error('Login failed:', error.message);
