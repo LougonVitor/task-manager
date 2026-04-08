@@ -9,6 +9,11 @@
   margin-bottom: 15px;
   box-shadow: var(--card-shadow);
   border: 1px solid #eee;
+  transition: .3s;
+}
+
+.task-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.110);
 }
 
 .task-content {
