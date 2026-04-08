@@ -1,0 +1,50 @@
+:root {
+  --header-bg-color: #14918b; /* The precise teal from your previous designs */
+  --header-text-color: #ffffff;
+}
+
+.main-header {
+  background-color: var(--header-bg-color);
+  width: 100%;
+  padding: 20px 0; /* Adjust vertical height */
+  color: var(--header-text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow seen in previous images */
+}
+
+.header-container {
+  max-width: 900px; /* Matches the width constraint of your main task container */
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between; /* Pushes title left, nav links right */
+  align-items: center;
+  padding: 0 20px; /* Internal padding so elements don't touch edges */
+}
+
+/* App Title styling */
+.app-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Navigation grouping */
+.header-nav {
+  display: flex;
+  gap: 25px; /* Adds consistent spacing between "Tasks" and "Users" */
+}
+
+/* Base Link styling */
+.nav-link {
+  color: inherit; /* Inherits white from the header */
+  text-decoration: none; /* Removes default hyperlink underline */
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 5px 0; /* Creates an invisible box around the link for clicking ease */
+}
+
+/* The Active Link style (The underlined link) */
+.nav-link.active {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px; /* Space between the text and the line */
+}
