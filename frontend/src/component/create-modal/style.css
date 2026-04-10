@@ -1,0 +1,117 @@
+/* Modal Overlay with subtle blur */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(3px);
+}
+
+/* Modal Content Card */
+.modal-content {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 16px; /* Matching the task card corners */
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  animation: modalPop 0.25s ease-out;
+}
+
+.modal-title {
+  margin: 0;
+  color: #0d9488; /* Teal color from your screenshot */
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Form Styling */
+.task-form {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #6b7280; /* Gray text for labels */
+  font-size: 0.9rem;
+}
+
+/* Matching your Pill-shaped Search Bar */
+.modal-input {
+  width: 100%;
+  padding: 12px 20px;
+  border: 1.5px solid #0d9488; /* Teal border */
+  border-radius: 30px; /* Pill shape like your search bar */
+  font-size: 0.95rem;
+  outline: none;
+  box-sizing: border-box;
+  color: #374151;
+}
+
+.modal-input::placeholder {
+  color: #9ca3af;
+}
+
+.modal-textarea {
+  border-radius: 16px; /* Textarea shouldn't be a full pill */
+  height: 120px;
+  resize: none;
+}
+
+/* Footer & Buttons */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.btn-cancel-link {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.btn-cancel-link:hover {
+  text-decoration: underline;
+}
+
+/* Primary Teal Button style */
+.btn-primary-teal {
+  background-color: #0d9488;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.1s, background-color 0.2s;
+}
+
+.btn-primary-teal:hover {
+  background-color: #0f766e;
+  transform: translateY(-1px);
+}
+
+/* Animation */
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
