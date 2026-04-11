@@ -6,8 +6,6 @@ import { TaskCard } from '../../component/task-card';
 import { TaskModal } from '../../component/task-modal';
 import type { Task } from '../../interface/task';
 
-// Define a type for our Task for better TS support
-
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([
     { id: 1, title: 'Integrate User Authentication', date: '22/11/2025', desc: 'Finalize the JWT token generation on the back-end...', completed: true },

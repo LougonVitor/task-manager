@@ -1,13 +1,15 @@
 import { Plus } from 'lucide-react';
 import './style.css';
+import type { Task } from '../../interface/task';
 
 interface TaskModalProps {
+  task?: Task;
   onClose: () => void;
   isCreateModal: boolean;
   isDeleteModal: boolean;
 }
 
-export function TaskModal({onClose, isCreateModal, isDeleteModal}: TaskModalProps) {
+export function TaskModal({task, onClose, isCreateModal, isDeleteModal}: TaskModalProps) {
   return (
     <>
     <div className="modal-overlay">
@@ -22,7 +24,7 @@ export function TaskModal({onClose, isCreateModal, isDeleteModal}: TaskModalProp
           <div className="input-group">
             <label>Title</label>
             <input type="text" placeholder="Enter task title..." className="modal-input" {...isDeleteModal ? { disabled: true } : {}}
-            value={''}/>
+            value={task?.title}/>
           </div>
           {isDeleteModal ? 
           <></> 
@@ -30,12 +32,12 @@ export function TaskModal({onClose, isCreateModal, isDeleteModal}: TaskModalProp
           <>
           <div className="input-group">
             <label>Deadline</label>
-            <input type="date" className="modal-input" value={''}/>
+            <input type="date" className="modal-input" value={task?.date}/>
           </div>
 
           <div className="input-group">
             <label>Description</label>
-            <textarea placeholder="Description of the new task..." className="modal-input modal-textarea" value={''} />
+            <textarea placeholder="Description of the new task..." className="modal-input modal-textarea" value={task?.desc} />
           </div>
           </>
           }
