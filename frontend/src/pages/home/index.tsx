@@ -17,6 +17,7 @@ export function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreateModal, setIsCreateModal] = useState(true);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const filters = ['completed', 'pending'] as const;
 
@@ -48,6 +49,26 @@ export function Home() {
     );
   };
 
+  const handleAddTask = () => {
+    setIsDeleteModal(false); 
+    setIsCreateModal(true); 
+    setIsModalOpen(true);
+    setSelectedTask(null);
+  }
+
+  const handleEditTask = (task: Task) => {
+    setIsDeleteModal(false);
+    setIsCreateModal(false);
+    setIsModalOpen(true);
+    setSelectedTask(task);
+  }
+
+  const handleDeleteTask = (task: Task) => {
+    setIsDeleteModal(true);
+    setIsModalOpen(true);
+    setSelectedTask(task);
+  }
+
   // Helper to render sections (Keeps JSX clean)
   const renderTaskSection = (title: string, list: Task[]) => {
     if (list.length === 0) return null;
@@ -67,15 +88,8 @@ export function Home() {
             description={task.desc}
             status={task.completed}
             onStatusChange={() => handleStatusToggle(task.id)}
-            onEdit={() => {
-              setIsDeleteModal(false);
-              setIsCreateModal(false);
-              setIsModalOpen(true);
-            }}
-            onDelete={() => {
-              setIsDeleteModal(true);
-              setIsModalOpen(true);
-            }}
+            onEdit={() => handleEditTask(task)}
+            onDelete={() => handleDeleteTask(task)}
           />
         ))}
       </section>
@@ -89,25 +103,13 @@ export function Home() {
       <div className="container">
         <div className="header-actions">
           <div className="input-wrapper">
-            <input
-              type="text"
-              placeholder="Search tasks..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+            <input type="text" placeholder="Search tasks..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             <button className="add-btn" aria-label="Search">
               <Search size={20} />
             </button>
           </div>
 
-          <button 
-            className="add-task-button" 
-            onClick={() => { 
-              setIsDeleteModal(false); 
-              setIsCreateModal(true); 
-              setIsModalOpen(true); 
-            }}
-          >
+          <button className="add-task-button" onClick={() => handleAddTask()} >
             <Plus size={20} />
             <span>Add New Task</span>
           </button>
@@ -131,6 +133,7 @@ export function Home() {
 
       {isModalOpen && (
         <TaskModal
+          task={selectedTask}
           onClose={() => setIsModalOpen(false)}
           isCreateModal={isCreateModal}
           isDeleteModal={isDeleteModal}
