@@ -81,7 +81,7 @@ export function Home() {
         </div>
         {list.map(task => (
           <TaskCard
-            key={task.id} // Essential for React reconciliation
+            key={task.id}
             id={task.id}
             title={task.title}
             date={task.date}
