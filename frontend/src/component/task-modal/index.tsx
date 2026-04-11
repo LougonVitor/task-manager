@@ -3,7 +3,7 @@ import './style.css';
 import type { Task } from '../../interface/task';
 
 interface TaskModalProps {
-  task?: Task;
+  task?: Task | null;
   onClose: () => void;
   isCreateModal: boolean;
   isDeleteModal: boolean;
