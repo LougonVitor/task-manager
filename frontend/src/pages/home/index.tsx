@@ -4,15 +4,9 @@ import { useState, useMemo } from 'react';
 import { Header } from '../../component/header';
 import { TaskCard } from '../../component/task-card';
 import { TaskModal } from '../../component/task-modal';
+import type { Task } from '../../interface/task';
 
 // Define a type for our Task for better TS support
-interface Task {
-  id: number;
-  title: string;
-  date: string;
-  desc: string;
-  completed: boolean;
-}
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([
