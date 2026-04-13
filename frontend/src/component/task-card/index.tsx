@@ -1,32 +1,29 @@
+import type { Task } from '../../interface/task';
 import './style.css';
 import { Check, Edit2, Trash2, Bookmark } from 'lucide-react';
 
 export interface TaskProps {
-  id: number;
-  title: string;
-  date: string;
-  description: string;
-  status: boolean;
+  task: Task;
   onStatusChange: () => void;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-export function TaskCard({ id, title, date, description, status, onStatusChange, onEdit, onDelete }: TaskProps) {
+export function TaskCard({ task, onStatusChange, onEdit, onDelete }: TaskProps) {
 
   return (
       <>
-        <div key={id} className="task-card">
-          {status 
+        <div key={task.id} className="task-card">
+          {task.isCompleted 
               ? <div className="status-icon-check"><Check size={24} color="#00a896" /></div> 
               : <div className="status-icon-bookmark"><Bookmark size={24} fill="#d4d782" color="#d4d782" /></div>
           }
           <div className="task-content">
-              {status
-                  ? <h3>{title} <span className="date-label">Completed at: {date}</span></h3>
-                  : <h3>{title} <span className="date-label">Deadline: {date}</span></h3>
+              {task.isCompleted
+                  ? <h3>{task.title} <span className="date-label">Completed at: {task.completedAt?.toLocaleDateString()}</span></h3>
+                  : <h3>{task.title} <span className="date-label">Deadline: {task.deadline.toLocaleDateString()}</span></h3>
               }
-            <p>{description}</p>
+            <p>{task.description}</p>
           </div>
           <div className="action-icons">
             <button className="icon-circle" onClick={onStatusChange}>

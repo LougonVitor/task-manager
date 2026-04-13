@@ -32,12 +32,12 @@ export function TaskModal({task, onClose, isCreateModal, isDeleteModal}: TaskMod
           <>
           <div className="input-group">
             <label>Deadline</label>
-            <input type="date" className="modal-input" value={task?.date}/>
+            <input type="date" className="modal-input" value={task?.deadline ? new Date(task.deadline).toISOString().slice(0, 10) : ''} />
           </div>
 
           <div className="input-group">
             <label>Description</label>
-            <textarea placeholder="Description of the new task..." className="modal-input modal-textarea" value={task?.desc} />
+            <textarea placeholder="Description of the new task..." className="modal-input modal-textarea" value={task?.description} />
           </div>
           </>
           }

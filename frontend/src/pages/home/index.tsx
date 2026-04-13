@@ -8,9 +8,9 @@ import type { Task } from '../../interface/task';
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, title: 'Integrate User Authentication', date: '22/11/2025', desc: 'Finalize the JWT token generation on the back-end...', completed: true },
-    { id: 2, title: 'Integrate User Authentication', date: '22/11/2025', desc: 'Finalize the JWT token generation on the back-end...', completed: false },
-    { id: 3, title: 'Buy Groceries for Dinner', date: '22/11/2025', desc: 'Milk, eggs, bread, and check the expiration date...', completed: false },
+    { id: 1, title: 'Integrate User Authentication', deadline: new Date('2025-11-22'), description: 'Finalize the JWT token generation on the back-end...', isCompleted: true },
+    { id: 2, title: 'Integrate User Authentication', deadline: new Date('2025-11-22'), description: 'Finalize the JWT token generation on the back-end...', isCompleted: false },
+    { id: 3, title: 'Buy Groceries for Dinner', deadline: new Date('2025-11-22'), description: 'Milk, eggs, bread, and check the expiration date...', isCompleted: false },
   ]);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -25,19 +25,19 @@ export function Home() {
   const filteredTasks = useMemo(() => {
     return tasks.filter(task => {
       const search = searchQuery.toLowerCase();
-      const statusString = task.completed ? 'completed' : 'pending';
+      const statusString = task.isCompleted ? 'completed' : 'pending';
       
       return (
         task.title.toLowerCase().includes(search) ||
-        task.desc.toLowerCase().includes(search) ||
+        task.description.toLowerCase().includes(search) ||
         statusString.includes(search)
       );
     });
   }, [tasks, searchQuery]);
 
   // Split tasks into categories once per render
-  const pendingTasks = filteredTasks.filter(t => !t.completed);
-  const completedTasks = filteredTasks.filter(t => t.completed);
+  const pendingTasks = filteredTasks.filter(t => !t.isCompleted);
+  const completedTasks = filteredTasks.filter(t => t.isCompleted);
 
   const handleFilterButtonClick = (filter: typeof filters[number]) => {
     setSearchQuery(prev => (prev === filter ? '' : filter));
@@ -45,7 +45,7 @@ export function Home() {
 
   const handleStatusToggle = (id: number) => {
     setTasks(prevTasks =>
-      prevTasks.map(t => (t.id === id ? { ...t, completed: !t.completed } : t))
+      prevTasks.map(t => (t.id === id ? { ...t, isCompleted: !t.isCompleted } : t))
     );
   };
 
@@ -81,12 +81,7 @@ export function Home() {
         </div>
         {list.map(task => (
           <TaskCard
-            key={task.id}
-            id={task.id}
-            title={task.title}
-            date={task.date}
-            description={task.desc}
-            status={task.completed}
+            task={task}
             onStatusChange={() => handleStatusToggle(task.id)}
             onEdit={() => handleEditTask(task)}
             onDelete={() => handleDeleteTask(task)}
