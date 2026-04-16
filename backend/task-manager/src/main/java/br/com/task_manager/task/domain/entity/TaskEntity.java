@@ -1,6 +1,8 @@
 package br.com.task_manager.task.domain.entity;
 
 import br.com.task_manager.task.domain.valueobject.TaskStatus;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TaskEntity {
@@ -9,11 +11,11 @@ public class TaskEntity {
     private String description;
     private TaskStatus taskStatus;
     private LocalDateTime createdAt;
-    private LocalDateTime deadline;
+    private LocalDate deadline;
     private LocalDateTime completedAt;
 
     //All args constructor
-    public TaskEntity (Long id, String title, String description, TaskStatus taskStatus, LocalDateTime createdAt, LocalDateTime deadline, LocalDateTime completedAt) {
+    public TaskEntity (Long id, String title, String description, TaskStatus taskStatus, LocalDateTime createdAt, LocalDate deadline, LocalDateTime completedAt) {
         this.setId(id);
         this.setTitle(title);
         this.setDescription(description);
@@ -70,11 +72,11 @@ public class TaskEntity {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 

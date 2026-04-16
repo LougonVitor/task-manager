@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "tasks")
@@ -25,7 +26,7 @@ public class TaskJpaEntity {
     @Column(name = "dt_createdAt")
     private LocalDateTime createdAt;
     @Column(name = "dt_deadline")
-    private LocalDateTime deadline;
+    private LocalDate deadline;
     @Column(name = "dt_completed")
     private LocalDateTime completedAt;
 }
