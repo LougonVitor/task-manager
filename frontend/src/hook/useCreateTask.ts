@@ -20,6 +20,9 @@ export const useCreateTask = () => {
         mutationFn: async(task: TaskRequest) => {
             const response = await fetch(API_URL, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(task)
             });
 
