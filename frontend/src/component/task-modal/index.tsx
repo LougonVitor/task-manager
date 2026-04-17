@@ -1,6 +1,9 @@
 import { Plus } from 'lucide-react';
 import './style.css';
 import type { Task } from '../../interface/task';
+import type { TaskRequest } from '../../interface/taskRequest';
+import { useCreateTask } from '../../hook/useCreateTask';
+import { useState } from 'react';
 
 interface TaskModalProps {
   task?: Task | null;
@@ -9,7 +12,33 @@ interface TaskModalProps {
   isDeleteModal: boolean;
 }
 
-export function TaskModal({task, onClose, isCreateModal, isDeleteModal}: TaskModalProps) {
+export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskModalProps) {
+  const {mutate, isPending} = useCreateTask();
+
+  const [formData, setFormData] = useState<TaskRequest>({
+    title: '',
+    description: '',
+    status: 'in_progress',
+    deadline: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement| HTMLSelectElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmitNewTask = (e: React.SubmitEvent) => {
+    e.preventDefault();
+    mutate(formData, {
+      onSuccess: (data) => {console.log(data.createdAt.toString()); onClose();},
+      onError: (error) => console.error(error.message)
+    });
+  };
+
   return (
     <>
     <div className="modal-overlay">
@@ -20,11 +49,18 @@ export function TaskModal({task, onClose, isCreateModal, isDeleteModal}: TaskMod
           </h3>
         </div>
 
-        <form className="task-form" onSubmit={(e) => e.preventDefault()}>
+        <form className="task-form" onSubmit={handleSubmitNewTask}>
           <div className="input-group">
             <label>Title</label>
-            <input type="text" placeholder="Enter task title..." className="modal-input" {...isDeleteModal ? { disabled: true } : {}}
-            value={task?.title}/>
+            <input
+              name='title'
+              type="text"
+              placeholder="Enter task title..."
+              className="modal-input"
+              {...isDeleteModal ? { disabled: true } : {}}
+              value={isCreateModal ? formData.title : task?.title}
+              onChange={handleChange}
+            />
           </div>
           {isDeleteModal ? 
           <></> 
@@ -32,12 +68,24 @@ export function TaskModal({task, onClose, isCreateModal, isDeleteModal}: TaskMod
           <>
           <div className="input-group">
             <label>Deadline</label>
-            <input type="date" className="modal-input" value={task?.deadline ? new Date(task.deadline).toISOString().slice(0, 10) : ''} />
+            <input
+              name='deadline'
+              type="date"
+              className="modal-input"
+              value= {isCreateModal ? (formData.deadline ? new Date(formData.deadline).toISOString().slice(0, 10) : '') : (task?.deadline ? new Date(task.deadline).toISOString().slice(0, 10) : '')}
+              onChange={handleChange}
+            />
           </div>
 
           <div className="input-group">
             <label>Description</label>
-            <textarea placeholder="Description of the new task..." className="modal-input modal-textarea" value={task?.description} />
+            <textarea
+              name='description'
+              placeholder="Description of the new task..."
+              className="modal-input modal-textarea"
+              value={isCreateModal ? formData.description : task?.description}
+              onChange={handleChange}
+            />
           </div>
           </>
           }
@@ -52,7 +100,7 @@ export function TaskModal({task, onClose, isCreateModal, isDeleteModal}: TaskMod
             </button>
             <button type="submit" className="btn-primary-teal">
               <Plus size={18} style={{ marginRight: '4px' }} />
-              {isDeleteModal ? 'Delete Task' : (isCreateModal ? 'Add Task' : 'Edit Task')}
+              {isPending ? 'Saving...' : (isDeleteModal ? 'Delete Task' : (isCreateModal ? 'Add Task' : 'Edit Task'))}
             </button>
           </div>
         </form>
