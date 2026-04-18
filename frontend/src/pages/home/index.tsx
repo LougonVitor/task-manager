@@ -5,13 +5,10 @@ import { Header } from '../../component/header';
 import { TaskCard } from '../../component/task-card';
 import { TaskModal } from '../../component/task-modal';
 import type { Task } from '../../interface/task';
+import { useTaskData } from '../../hook/useTaskData';
 
 export function Home() {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, title: 'Integrate User Authentication', deadline: new Date('2025-11-22'), description: 'Finalize the JWT token generation on the back-end...', isCompleted: true },
-    { id: 2, title: 'Integrate User Authentication', deadline: new Date('2025-11-22'), description: 'Finalize the JWT token generation on the back-end...', isCompleted: false },
-    { id: 3, title: 'Buy Groceries for Dinner', deadline: new Date('2025-11-22'), description: 'Milk, eggs, bread, and check the expiration date...', isCompleted: false },
-  ]);
+  const { data } = useTaskData();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +20,7 @@ export function Home() {
 
   // Memoize filtered results for performance
   const filteredTasks = useMemo(() => {
-    return tasks.filter(task => {
+    return data?.filter(task => {
       const search = searchQuery.toLowerCase();
       const statusString = task.isCompleted ? 'completed' : 'pending';
       
@@ -33,20 +30,18 @@ export function Home() {
         statusString.includes(search)
       );
     });
-  }, [tasks, searchQuery]);
+  }, [data, searchQuery]);
 
   // Split tasks into categories once per render
-  const pendingTasks = filteredTasks.filter(t => !t.isCompleted);
-  const completedTasks = filteredTasks.filter(t => t.isCompleted);
+  const pendingTasks = filteredTasks?.filter(t => !t.isCompleted);
+  const completedTasks = filteredTasks?.filter(t => t.isCompleted);
 
   const handleFilterButtonClick = (filter: typeof filters[number]) => {
     setSearchQuery(prev => (prev === filter ? '' : filter));
   };
 
   const handleStatusToggle = (id: number) => {
-    setTasks(prevTasks =>
-      prevTasks.map(t => (t.id === id ? { ...t, isCompleted: !t.isCompleted } : t))
-    );
+    
   };
 
   const handleAddTask = () => {
@@ -70,8 +65,8 @@ export function Home() {
   }
 
   // Helper to render sections (Keeps JSX clean)
-  const renderTaskSection = (title: string, list: Task[]) => {
-    if (list.length === 0) return null;
+  const renderTaskSection = (title: string, list: Task[] | null) => {
+    if (list?.length === 0) return null;
 
     return (
       <section className="task-section">
@@ -79,7 +74,7 @@ export function Home() {
           <h2>{title}</h2>
           <span className="order-by">Order by: date</span>
         </div>
-        {list.map(task => (
+        {list?.map(task => (
           <TaskCard
             task={task}
             onStatusChange={() => handleStatusToggle(task.id)}
@@ -122,8 +117,10 @@ export function Home() {
           </div>
         </div>
 
-        {renderTaskSection("Completed", completedTasks)}
-        {renderTaskSection("To do", pendingTasks)}
+        {renderTaskSection("Completed", completedTasks ? completedTasks : null)}
+        {renderTaskSection("To do", pendingTasks ? pendingTasks : null)}
+
+
       </div>
 
       {isModalOpen && (

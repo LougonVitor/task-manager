@@ -20,8 +20,8 @@ export function TaskCard({ task, onStatusChange, onEdit, onDelete }: TaskProps) 
           }
           <div className="task-content">
               {task.isCompleted
-                  ? <h3>{task.title} <span className="date-label">Completed at: {task.completedAt?.toLocaleDateString()}</span></h3>
-                  : <h3>{task.title} <span className="date-label">Deadline: {task.deadline.toLocaleDateString()}</span></h3>
+                  ? <h3>{task.title} <span className="date-label">Completed at: {task.completedAt?.toString()}</span></h3>
+                  : <h3>{task.title} <span className="date-label">Deadline: {task.deadline.toString()}</span></h3>
               }
             <p>{task.description}</p>
           </div>
