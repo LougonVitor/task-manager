@@ -2,12 +2,14 @@ package br.com.task_manager.task.infrasctructure.repository;
 
 import br.com.task_manager.task.domain.entity.TaskEntity;
 import br.com.task_manager.task.domain.repository.ITaskRepository;
+import br.com.task_manager.task.domain.valueobject.TaskStatus;
 import br.com.task_manager.task.infrasctructure.entity.TaskJpaEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TaskJpaRepository implements ITaskRepository {
@@ -62,5 +64,20 @@ public class TaskJpaRepository implements ITaskRepository {
                 dbEntityCreated.getDeadline(),
                 dbEntityCreated.getCompletedAt()
         );
+    }
+
+    @Override
+    public void updateTaskStatus(long id) {
+        Optional<TaskJpaEntity> entityFound = this.taskJpaRepository.findById(id);
+
+        if(entityFound.isEmpty()) throw new RuntimeException("Task not found");
+
+        entityFound.get().setTaskStatus(
+                entityFound.get().getTaskStatus() == TaskStatus.COMPLETED
+                    ? TaskStatus.IN_PROGRESS
+                    : TaskStatus.COMPLETED
+        );
+
+        this.taskJpaRepository.save(entityFound.get());
     }
 }

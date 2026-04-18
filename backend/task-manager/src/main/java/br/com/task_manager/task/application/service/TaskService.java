@@ -44,4 +44,8 @@ public class TaskService {
 
         return new CreateResponseTaskCommand(response.getId(), response.getTitle(), response.getCreatedAt());
     }
+
+    public void updateTaskStatus(long id) {
+        this.taskRepository.updateTaskStatus(id);
+    }
 }
