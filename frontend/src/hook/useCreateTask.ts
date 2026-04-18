@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface TaskRequest {
-    title: string;
-    description: string;
-    status: string;
-    deadline: string;
+    title?: string;
+    description?: string;
+    status?: string;
+    deadline?: string;
 }
 
 interface TaskResponse {

@@ -1,6 +1,6 @@
 export interface TaskRequest{
-    title: string;
-    description: string;
-    status: string;
-    deadline: string;
+    title?: string;
+    description?: string;
+    status?: string;
+    deadline?: string;
 }

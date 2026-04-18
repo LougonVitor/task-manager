@@ -4,6 +4,7 @@ import type { Task } from '../../interface/task';
 import type { TaskRequest } from '../../interface/taskRequest';
 import { useCreateTask } from '../../hook/useCreateTask';
 import { useDeleteTask } from '../../hook/useDeleteTask';
+import { useUpdateTask } from '../../hook/useUpdateTask';
 import React, { useState } from 'react';
 
 interface TaskModalProps {
@@ -16,12 +17,13 @@ interface TaskModalProps {
 export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskModalProps) {
   const { mutate, isPending } = useCreateTask();
   const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
+  const { mutate: updateTask, isPending: isEditing } = useUpdateTask();
 
   const [formData, setFormData] = useState<TaskRequest>({
-    title: '',
-    description: '',
-    status: 'in_progress',
-    deadline: '',
+    title: task?.title,
+    description: task?.description,
+    status: task?.isCompleted ? 'completed' : 'in_progress',
+    deadline: task?.deadline.toString(),
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement| HTMLSelectElement>) => {
@@ -33,7 +35,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isCreateModal) {
@@ -49,6 +51,23 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
     else if (isDeleteModal && task?.id) {
       deleteTask(task.id, {
         onSuccess: () => {onClose(); console.log("Modal closing");},
+        onError: (error) => console.error(error.message)
+      });
+    }
+
+    else if (task) {
+      console.log("Está chegando aqui")
+
+      const taskRequeste : Task = {
+        id: task.id,
+        title: formData.title || 'Untitled Task',
+        description: formData.description || '',
+        isCompleted: false,
+        deadline: formData.deadline ? new Date(formData.deadline) : new Date()
+      }
+
+      updateTask(taskRequeste, {
+        onSuccess: () => {onClose(); console.log("Sucesso")},
         onError: (error) => console.error(error.message)
       });
     }
@@ -73,7 +92,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
               placeholder="Enter task title..."
               className="modal-input"
               {...isDeleteModal ? { disabled: true } : {}}
-              value={isCreateModal ? formData.title : task?.title}
+              value={formData.title}
               onChange={handleChange}
             />
           </div>
@@ -87,7 +106,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
               name='deadline'
               type="date"
               className="modal-input"
-              value= {isCreateModal ? (formData.deadline ? new Date(formData.deadline).toISOString().slice(0, 10) : '') : (task?.deadline ? new Date(task.deadline).toISOString().slice(0, 10) : '')}
+              value= {formData.deadline ? new Date(formData.deadline).toISOString().slice(0, 10) : ''}
               onChange={handleChange}
             />
           </div>
@@ -98,7 +117,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
               name='description'
               placeholder="Description of the new task..."
               className="modal-input modal-textarea"
-              value={isCreateModal ? formData.description : task?.description}
+              value={formData.description}
               onChange={handleChange}
             />
           </div>
@@ -119,6 +138,8 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
               ? 'Saving...'
               : isDeleteModal && isDeleting
               ? 'Deleting...'
+              : !isCreateModal && !isDeleteModal && isEditing
+              ? 'Editing...'
               : isDeleteModal
               ? 'Delete Task'
               : isCreateModal
