@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface TaskRequest {
     title: string;
@@ -16,6 +16,8 @@ interface TaskResponse {
 const API_URL = 'http://localhost:8080/task/create';
 
 export const useCreateTask = () => {
+    const queryClient = useQueryClient();
+
     return useMutation<TaskResponse, Error, TaskRequest>({
         mutationFn: async(task: TaskRequest) => {
             const response = await fetch(API_URL, {
@@ -32,6 +34,9 @@ export const useCreateTask = () => {
             }
 
             return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['task-data']});
         }
     });
 }
