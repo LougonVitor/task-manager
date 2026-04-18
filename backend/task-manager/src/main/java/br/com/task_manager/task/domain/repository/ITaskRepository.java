@@ -7,4 +7,5 @@ public interface ITaskRepository {
     List<TaskEntity> getAllTasks();
     TaskEntity createTask(TaskEntity entity);
     void updateTaskStatus(long id);
+    void deleteById(long id);
 }

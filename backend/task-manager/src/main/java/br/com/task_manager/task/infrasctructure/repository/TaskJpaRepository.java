@@ -80,4 +80,13 @@ public class TaskJpaRepository implements ITaskRepository {
 
         this.taskJpaRepository.save(entityFound.get());
     }
+
+    @Override
+    public void deleteById(long id) {
+        Optional<TaskJpaEntity> entityFound = this.taskJpaRepository.findById(id);
+
+        if(entityFound.isEmpty()) throw new RuntimeException("Task not found");
+
+        this.taskJpaRepository.deleteById(id);
+    }
 }

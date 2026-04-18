@@ -36,4 +36,9 @@ public class TaskController {
     public void updateTaskStatus(@PathVariable long id) {
         this.taskService.updateTaskStatus(id);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteTask(@PathVariable long id) {
+        this.taskService.deleteById(id);
+    }
 }

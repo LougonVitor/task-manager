@@ -48,4 +48,8 @@ public class TaskService {
     public void updateTaskStatus(long id) {
         this.taskRepository.updateTaskStatus(id);
     }
+
+    public void deleteById(long id) {
+        this.taskRepository.deleteById(id);
+    }
 }
