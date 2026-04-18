@@ -6,9 +6,10 @@ import { TaskCard } from '../../component/task-card';
 import { TaskModal } from '../../component/task-modal';
 import type { Task } from '../../interface/task';
 import { useTaskData } from '../../hook/useTaskData';
+import { updateTaskStatus } from '../../hook/useUpdateTaskStatus';
 
 export function Home() {
-  const { data } = useTaskData();
+  const { data, refetch } = useTaskData();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,8 +41,13 @@ export function Home() {
     setSearchQuery(prev => (prev === filter ? '' : filter));
   };
 
-  const handleStatusToggle = (id: number) => {
-    
+  const handleStatusToggle = async (id: number) => {
+    try {
+      await updateTaskStatus(id);
+      refetch(); // Refresh data after status update
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
   };
 
   const handleAddTask = () => {
