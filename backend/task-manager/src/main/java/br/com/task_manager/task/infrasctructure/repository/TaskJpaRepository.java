@@ -6,10 +6,38 @@ import br.com.task_manager.task.infrasctructure.entity.TaskJpaEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Repository
 public class TaskJpaRepository implements ITaskRepository {
     @Autowired
     private ITaskJpaRepository taskJpaRepository;
+
+    @Override
+    public List<TaskEntity> getAllTasks() {
+        List<TaskJpaEntity> allJpaTasks = taskJpaRepository.findAll();
+
+        if(!allJpaTasks.isEmpty()) {
+            List<TaskEntity> allTasksEntity = new ArrayList<>();
+
+            for(TaskJpaEntity jpaEntity : allJpaTasks) {
+                allTasksEntity.add( new TaskEntity(
+                        jpaEntity.getId()
+                        , jpaEntity.getTitle()
+                        , jpaEntity.getDescription()
+                        , jpaEntity.getTaskStatus()
+                        , jpaEntity.getCreatedAt()
+                        , jpaEntity.getDeadline()
+                        , jpaEntity.getCompletedAt()
+                ));
+            }
+
+            return allTasksEntity;
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public TaskEntity createTask(TaskEntity entity) {
