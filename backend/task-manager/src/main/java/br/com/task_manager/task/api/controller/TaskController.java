@@ -32,7 +32,7 @@ public class TaskController {
         return TaskMapper.toTaskResponse(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/status")
     public void updateTaskStatus(@PathVariable long id) {
         this.taskService.updateTaskStatus(id);
     }

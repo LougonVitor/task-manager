@@ -1,7 +1,7 @@
 const API_URL = 'http://localhost:8080/task';
 
 export const updateTaskStatus = async (id: number) => {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await fetch(`${API_URL}/${id}/status`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
