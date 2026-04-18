@@ -1,8 +1,6 @@
 package br.com.task_manager.task.application.service;
 
-import br.com.task_manager.task.application.dto.CreateResponseTaskCommand;
-import br.com.task_manager.task.application.dto.CreateTaskCommand;
-import br.com.task_manager.task.application.dto.TaskResponse;
+import br.com.task_manager.task.application.dto.*;
 import br.com.task_manager.task.domain.entity.TaskEntity;
 import br.com.task_manager.task.domain.repository.ITaskRepository;
 import br.com.task_manager.task.domain.valueobject.TaskStatus;
@@ -44,6 +42,18 @@ public class TaskService {
         TaskEntity response = this.taskRepository.createTask(taskEntity);
 
         return new CreateResponseTaskCommand(response.getId(), response.getTitle(), response.getCreatedAt());
+    }
+
+    public UpdateResponseTaskCommand updateTask(long id, UpdateTaskCommand command) {
+        TaskEntity taskEntity = new TaskEntity();
+
+        taskEntity.setTitle(command.title());
+        taskEntity.setDescription(command.description());
+        taskEntity.setDeadline(command.deadline());
+
+        TaskEntity response = this.taskRepository.updateTask(id, taskEntity);
+
+        return new UpdateResponseTaskCommand(response.getId(), response.getTitle(), response.getCreatedAt());
     }
 
     public void updateTaskStatus(long id) {

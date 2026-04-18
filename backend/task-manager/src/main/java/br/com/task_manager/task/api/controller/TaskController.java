@@ -6,6 +6,7 @@ import br.com.task_manager.task.api.mapper.TaskMapper;
 import br.com.task_manager.task.application.dto.CreateResponseTaskCommand;
 import br.com.task_manager.task.application.dto.CreateTaskCommand;
 import br.com.task_manager.task.application.dto.TaskResponse;
+import br.com.task_manager.task.application.dto.UpdateTaskCommand;
 import br.com.task_manager.task.application.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,12 @@ public class TaskController {
         CreateResponseTaskCommand response = this.taskService.createTask(taskCommand);
 
         return TaskMapper.toTaskResponse(response);
+    }
+
+    @PutMapping("/{id}")
+    public void updateTask(@PathVariable long id, @RequestBody TaskRequestDto request) {
+        UpdateTaskCommand taskCommand = new UpdateTaskCommand(request.title(), request.description(), request.status(), request.deadline());
+        this.taskService.updateTask(id, taskCommand);
     }
 
     @PutMapping("/{id}/status")

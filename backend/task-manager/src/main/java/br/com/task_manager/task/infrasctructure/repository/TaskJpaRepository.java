@@ -67,6 +67,29 @@ public class TaskJpaRepository implements ITaskRepository {
     }
 
     @Override
+    public TaskEntity updateTask(long id, TaskEntity entity) {
+        Optional<TaskJpaEntity> entityFound = this.taskJpaRepository.findById(id);
+
+        if(entityFound.isEmpty()) throw new RuntimeException("Task not found");
+
+        entityFound.get().setTitle(entity.getTitle());
+        entityFound.get().setDeadline(entity.getDeadline());
+        entityFound.get().setDescription(entity.getDescription());
+
+        TaskJpaEntity dbEntityUpdated = this.taskJpaRepository.save(entityFound.get());
+
+        return new TaskEntity(
+                dbEntityUpdated.getId(),
+                dbEntityUpdated.getTitle(),
+                dbEntityUpdated.getDescription(),
+                dbEntityUpdated.getTaskStatus(),
+                dbEntityUpdated.getCreatedAt(),
+                dbEntityUpdated.getDeadline(),
+                dbEntityUpdated.getCompletedAt()
+        );
+    }
+
+    @Override
     public void updateTaskStatus(long id) {
         Optional<TaskJpaEntity> entityFound = this.taskJpaRepository.findById(id);
 
