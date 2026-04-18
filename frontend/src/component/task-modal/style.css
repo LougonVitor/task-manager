@@ -57,6 +57,12 @@
   outline: none;
   box-sizing: border-box;
   color: #374151;
+  transition: .3s;
+}
+
+.modal-input::-webkit-calendar-picker-indicator:hover {
+  transform: scale(1.09);
+  cursor: pointer;
 }
 
 .modal-input::placeholder {
