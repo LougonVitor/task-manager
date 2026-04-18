@@ -65,6 +65,7 @@ export function Home() {
   }
 
   const handleDeleteTask = (task: Task) => {
+    setIsCreateModal(false);
     setIsDeleteModal(true);
     setIsModalOpen(true);
     setSelectedTask(task);
@@ -82,6 +83,7 @@ export function Home() {
         </div>
         {list?.map(task => (
           <TaskCard
+            key={task.id}
             task={task}
             onStatusChange={() => handleStatusToggle(task.id)}
             onEdit={() => handleEditTask(task)}
@@ -123,8 +125,16 @@ export function Home() {
           </div>
         </div>
 
-        {renderTaskSection("Completed", completedTasks ? completedTasks : null)}
-        {renderTaskSection("To do", pendingTasks ? pendingTasks : null)}
+        {data && data.length > 0
+          ? (
+            <>
+            {renderTaskSection("Completed", completedTasks ? completedTasks : null)}
+            {renderTaskSection("To do", pendingTasks ? pendingTasks : null)}
+            </>
+          )
+          : <>There are no tasks saved!</>
+        }
+
 
 
       </div>
@@ -132,7 +142,7 @@ export function Home() {
       {isModalOpen && (
         <TaskModal
           task={selectedTask}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {setIsModalOpen(false);}}
           isCreateModal={isCreateModal}
           isDeleteModal={isDeleteModal}
         />

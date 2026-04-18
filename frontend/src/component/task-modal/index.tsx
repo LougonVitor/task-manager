@@ -3,7 +3,8 @@ import './style.css';
 import type { Task } from '../../interface/task';
 import type { TaskRequest } from '../../interface/taskRequest';
 import { useCreateTask } from '../../hook/useCreateTask';
-import { useState } from 'react';
+import { useDeleteTask } from '../../hook/useDeleteTask';
+import React, { useState } from 'react';
 
 interface TaskModalProps {
   task?: Task | null;
@@ -13,7 +14,8 @@ interface TaskModalProps {
 }
 
 export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskModalProps) {
-  const {mutate, isPending} = useCreateTask();
+  const { mutate, isPending } = useCreateTask();
+  const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
 
   const [formData, setFormData] = useState<TaskRequest>({
     title: '',
@@ -31,12 +33,25 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
     }));
   };
 
-  const handleSubmitNewTask = (e: React.SubmitEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate(formData, {
-      onSuccess: (data) => {console.log(data.createdAt.toString()); onClose();},
-      onError: (error) => console.error(error.message)
-    });
+
+    if (isCreateModal) {
+      mutate(formData, {
+        onSuccess: (data) => {
+          console.log(data.createdAt.toString());
+          onClose();
+        },
+        onError: (error) => console.error(error.message)
+      });
+    }
+
+    else if (isDeleteModal && task?.id) {
+      deleteTask(task.id, {
+        onSuccess: () => {onClose(); console.log("Modal closing");},
+        onError: (error) => console.error(error.message)
+      });
+    }
   };
 
   return (
@@ -49,7 +64,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
           </h3>
         </div>
 
-        <form className="task-form" onSubmit={handleSubmitNewTask}>
+        <form className="task-form" onSubmit={handleSubmit}>
           <div className="input-group">
             <label>Title</label>
             <input
@@ -100,7 +115,15 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
             </button>
             <button type="submit" className="btn-primary-teal">
               <Plus size={18} style={{ marginRight: '4px' }} />
-              {isPending ? 'Saving...' : (isDeleteModal ? 'Delete Task' : (isCreateModal ? 'Add Task' : 'Edit Task'))}
+              {isCreateModal && isPending
+              ? 'Saving...'
+              : isDeleteModal && isDeleting
+              ? 'Deleting...'
+              : isDeleteModal
+              ? 'Delete Task'
+              : isCreateModal
+              ? 'Add Task'
+              : 'Edit Task'}
             </button>
           </div>
         </form>
