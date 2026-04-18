@@ -21,9 +21,10 @@ public class TaskService {
     public List<TaskResponse> getAllTasks() {
         List<TaskEntity> allTasksEntity = taskRepository.getAllTasks();
 
-        if(allTasksEntity.isEmpty()) throw new RuntimeException("There are no tasks saved!");
-
         List<TaskResponse> response = new ArrayList<>();
+
+        if(allTasksEntity.isEmpty()) return response;
+
         for(TaskEntity entity : allTasksEntity) {
             response.add(new TaskResponse(entity));
         }

@@ -37,7 +37,7 @@ public class TaskJpaRepository implements ITaskRepository {
 
             return allTasksEntity;
         } else {
-            return null;
+            return new ArrayList<TaskEntity>();
         }
     }
 
