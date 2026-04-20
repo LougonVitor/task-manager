@@ -25,6 +25,7 @@ export function Home() {
       const search = searchQuery.toLowerCase();
       const statusString = task.isCompleted ? 'completed' : 'pending';
       
+      if(task.title == null || task.description == null) return null;
       return (
         task.title.toLowerCase().includes(search) ||
         task.description.toLowerCase().includes(search) ||
