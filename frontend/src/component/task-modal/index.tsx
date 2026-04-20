@@ -94,6 +94,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
               {...isDeleteModal ? { disabled: true } : {}}
               value={formData.title}
               onChange={handleChange}
+              required
             />
           </div>
           {isDeleteModal ? 
@@ -108,6 +109,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
               className="modal-input"
               value= {formData.deadline ? new Date(formData.deadline).toISOString().slice(0, 10) : ''}
               onChange={handleChange}
+              required
             />
           </div>
 
@@ -119,6 +121,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
               className="modal-input modal-textarea"
               value={formData.description}
               onChange={handleChange}
+              required
             />
           </div>
           </>
