@@ -31,12 +31,12 @@ export function Home() {
         task.description.toLowerCase().includes(search) ||
         statusString.includes(search)
       );
-    });
+    }).sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
   }, [data, searchQuery]);
 
   // Split tasks into categories once per render
+  const completedTasks  = filteredTasks?.filter(t => t.isCompleted);
   const pendingTasks = filteredTasks?.filter(t => !t.isCompleted);
-  const completedTasks = filteredTasks?.filter(t => t.isCompleted);
 
   const handleFilterButtonClick = (filter: typeof filters[number]) => {
     setSearchQuery(prev => (prev === filter ? '' : filter));
@@ -80,7 +80,7 @@ export function Home() {
       <section className="task-section">
         <div className="section-header">
           <h2>{title}</h2>
-          <span className="order-by">Order by: date</span>
+          <span className="order-by">Order by: deadline</span>
         </div>
         {list?.map(task => (
           <TaskCard
