@@ -11,7 +11,6 @@ export function Header() {
         {/* Navigation Links */}
         <nav className="header-nav">
           <a href="#tasks" className="nav-link active">Tasks</a>
-          <a href="#users" className="nav-link">Users</a>
         </nav>
       </div>
     </header>
