@@ -40,6 +40,12 @@
   font-weight: 500;
   font-size: 0.95rem;
   padding: 5px 0; /* Creates an invisible box around the link for clicking ease */
+  cursor: pointer;
+  transition: .3s;
+}
+
+.nav-link.logoff:hover {
+  color: rgb(255, 65, 65);
 }
 
 /* The Active Link style (The underlined link) */
