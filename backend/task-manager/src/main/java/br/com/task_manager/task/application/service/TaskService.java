@@ -30,6 +30,20 @@ public class TaskService {
         return response;
     }
 
+    public List<TaskResponse> getTasksByUserId(Long userId) {
+        List<TaskEntity> allTasksEntity = taskRepository.findByUserId(userId);
+
+        List<TaskResponse> response = new ArrayList<>();
+
+        if(allTasksEntity.isEmpty()) return response;
+
+        for(TaskEntity entity : allTasksEntity) {
+            response.add(new TaskResponse(entity));
+        }
+
+        return response;
+    }
+
     public CreateResponseTaskCommand createTask(CreateTaskCommand request) {
         TaskEntity taskEntity = new TaskEntity();
 

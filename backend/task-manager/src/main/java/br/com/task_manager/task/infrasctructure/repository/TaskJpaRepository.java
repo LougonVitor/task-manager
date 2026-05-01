@@ -43,6 +43,26 @@ public class TaskJpaRepository implements ITaskRepository {
     }
 
     @Override
+    public List<TaskEntity> findByUserId(Long userId) {
+        try {
+            return this.taskJpaRepository.findByUserId(userId).stream().map(
+                    jpaEntity -> new TaskEntity(
+                            jpaEntity.getId()
+                            , jpaEntity.getTitle()
+                            , jpaEntity.getDescription()
+                            , jpaEntity.getTaskStatus()
+                            , jpaEntity.getCreatedAt()
+                            , jpaEntity.getDeadline()
+                            , jpaEntity.getCompletedAt()
+                            , jpaEntity.getUserId()
+                    )).toList();
+        } catch(Exception ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+    }
+
+    @Override
     public TaskEntity createTask(TaskEntity entity) {
         TaskJpaEntity jpaEntity = new TaskJpaEntity(
                 entity.getId(),

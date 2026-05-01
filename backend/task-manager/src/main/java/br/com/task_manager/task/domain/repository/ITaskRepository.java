@@ -5,6 +5,7 @@ import java.util.List;
 
 public interface ITaskRepository {
     List<TaskEntity> getAllTasks();
+    List<TaskEntity> findByUserId(Long userId);
     TaskEntity createTask(TaskEntity entity);
     TaskEntity updateTask(long id, TaskEntity entity);
     void updateTaskStatus(long id);
