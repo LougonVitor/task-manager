@@ -34,4 +34,6 @@ public class UserSecurityDetails implements UserDetails {
     public String getUsername() {
         return this.user.getUsername();
     }
+
+    public Long getUserId() { return this.user.getId(); }
 }
