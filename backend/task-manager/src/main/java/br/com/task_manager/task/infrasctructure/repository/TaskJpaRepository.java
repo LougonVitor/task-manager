@@ -32,6 +32,7 @@ public class TaskJpaRepository implements ITaskRepository {
                         , jpaEntity.getCreatedAt()
                         , jpaEntity.getDeadline()
                         , jpaEntity.getCompletedAt()
+                        , jpaEntity.getUserId()
                 ));
             }
 
@@ -50,7 +51,8 @@ public class TaskJpaRepository implements ITaskRepository {
                 entity.getTaskStatus(),
                 entity.getCreatedAt(),
                 entity.getDeadline(),
-                entity.getCompletedAt()
+                entity.getCompletedAt(),
+                entity.getUserId()
         );
 
         TaskJpaEntity dbEntityCreated = this.taskJpaRepository.save(jpaEntity);
@@ -62,7 +64,8 @@ public class TaskJpaRepository implements ITaskRepository {
                 dbEntityCreated.getTaskStatus(),
                 dbEntityCreated.getCreatedAt(),
                 dbEntityCreated.getDeadline(),
-                dbEntityCreated.getCompletedAt()
+                dbEntityCreated.getCompletedAt(),
+                dbEntityCreated.getUserId()
         );
     }
 
@@ -85,7 +88,8 @@ public class TaskJpaRepository implements ITaskRepository {
                 dbEntityUpdated.getTaskStatus(),
                 dbEntityUpdated.getCreatedAt(),
                 dbEntityUpdated.getDeadline(),
-                dbEntityUpdated.getCompletedAt()
+                dbEntityUpdated.getCompletedAt(),
+                dbEntityUpdated.getUserId()
         );
     }
 

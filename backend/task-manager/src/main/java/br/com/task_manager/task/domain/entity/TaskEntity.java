@@ -13,9 +13,10 @@ public class TaskEntity {
     private LocalDateTime createdAt;
     private LocalDate deadline;
     private LocalDateTime completedAt;
+    private Long userId;
 
     //All args constructor
-    public TaskEntity (Long id, String title, String description, TaskStatus taskStatus, LocalDateTime createdAt, LocalDate deadline, LocalDateTime completedAt) {
+    public TaskEntity (Long id, String title, String description, TaskStatus taskStatus, LocalDateTime createdAt, LocalDate deadline, LocalDateTime completedAt, Long userId) {
         this.setId(id);
         this.setTitle(title);
         this.setDescription(description);
@@ -23,13 +24,13 @@ public class TaskEntity {
         this.setCreatedAt(createdAt);
         this.setDeadline(deadline);
         this.setCompletedAt(completedAt);
+        this.setUserId(userId);
     }
 
     //No args constructor
     public TaskEntity(){
 
     }
-
 
     //Getters and setters
     public Long getId() {
@@ -86,5 +87,13 @@ public class TaskEntity {
 
     public void setCompletedAt(LocalDateTime completedAt) {
         this.completedAt = completedAt;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

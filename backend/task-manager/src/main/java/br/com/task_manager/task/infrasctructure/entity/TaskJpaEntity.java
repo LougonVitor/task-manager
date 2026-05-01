@@ -29,4 +29,6 @@ public class TaskJpaEntity {
     private LocalDate deadline;
     @Column(name = "dt_completed")
     private LocalDateTime completedAt;
+    @Column(name = "id_user")
+    private Long userId;
 }
