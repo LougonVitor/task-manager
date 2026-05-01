@@ -26,7 +26,7 @@ public class TaskController {
 
     @PostMapping("/create")
     public TaskResponseDto createTask(@RequestBody TaskRequestDto request) {
-        CreateTaskCommand taskCommand = new CreateTaskCommand(request.title(), request.description(), request.status(), request.deadline());
+        CreateTaskCommand taskCommand = new CreateTaskCommand(request.title(), request.description(), request.status(), request.deadline(), request.userId());
 
         CreateResponseTaskCommand response = this.taskService.createTask(taskCommand);
 

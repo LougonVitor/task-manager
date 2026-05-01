@@ -38,6 +38,7 @@ public class TaskService {
         taskEntity.setTaskStatus(TaskStatus.getEnumValue(request.status().toUpperCase()));
         taskEntity.setCreatedAt(LocalDateTime.now());
         taskEntity.setDeadline(request.deadline());
+        taskEntity.setUserId(request.userId());
 
         TaskEntity response = this.taskRepository.createTask(taskEntity);
 
