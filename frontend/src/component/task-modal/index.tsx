@@ -8,73 +8,90 @@ import { useUpdateTask } from '../../hook/useUpdateTask';
 import React, { useState } from 'react';
 
 interface TaskModalProps {
-  task?: Task | null;
-  onClose: () => void;
-  isCreateModal: boolean;
-  isDeleteModal: boolean;
-  referenceId: Number;
+    task?: Task | null;
+    onClose: () => void;
+    isCreateModal: boolean;
+    isDeleteModal: boolean;
+    referenceId: Number;
 }
 
 export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referenceId}: TaskModalProps) {
 
-  const { mutate, isPending } = useCreateTask();
-  const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
-  const { mutate: updateTask, isPending: isEditing } = useUpdateTask();
+    const { mutate, isPending } = useCreateTask();
+    const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
+    const { mutate: updateTask, isPending: isEditing } = useUpdateTask();
+  
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
+    const [formData, setFormData] = useState<TaskRequest>({
+        title: task?.title,
+        description: task?.description,
+        status: task?.isCompleted ? 'completed' : 'in_progress',
+        deadline: task?.deadline.toString(),
+        userId: referenceId
+    });
 
-  const [formData, setFormData] = useState<TaskRequest>({
-    title: task?.title,
-    description: task?.description,
-    status: task?.isCompleted ? 'completed' : 'in_progress',
-    deadline: task?.deadline.toString(),
-    userId: referenceId
-  });
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement| HTMLSelectElement>) => {
+        const { name, value } = e.target;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement| HTMLSelectElement>) => {
-    const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
 
-    setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-    }));
-  };
+    const validateSubmit = (e: React.SubmitEvent) => {
+        e.preventDefault();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+        const currentErros = [];
 
-    if(!isCreateModal) {
-        console.log(task?.userId)
-        console.log(referenceId)
-        if (task?.userId != referenceId) return console.error("You cannot modify a task that is not yours!");
+        if(!formData.title || formData.title.trim() === "") currentErros.push("Title is required!")
+        if(!formData.deadline || formData.deadline.trim() === "") currentErros.push("Deadline is required!")
+        if(!formData.description || formData.description.trim() === "") currentErros.push("Description is required!")
+
+        if(currentErros.length > 0) {
+            setValidationErrors(currentErros);
+            return null;
+        } else {
+            handleSubmit
+        };
         
-        if (isDeleteModal && task?.id) {
-            deleteTask(task.id, {
-                onSuccess: () => {onClose()},
-                onError: (error) => console.error(error.message)
-            });
-        } else if (task) {
-            const taskRequeste : Task = {
-                id: task.id,
-                title: formData.title || 'Untitled Task',
-                description: formData.description || '',
-                isCompleted: false,
-                deadline: formData.deadline ? new Date(formData.deadline) : new Date()
-            }
+    }
 
-            updateTask(taskRequeste, {
-                onSuccess: () => {onClose(); console.log("Success")},
+    const handleSubmit = async () => {
+        if(!isCreateModal) {
+            console.log(task?.userId)
+            console.log(referenceId)
+            if (task?.userId != referenceId) return console.error("You cannot modify a task that is not yours!");
+            
+            if (isDeleteModal && task?.id) {
+                deleteTask(task.id, {
+                    onSuccess: () => {onClose()},
+                    onError: (error) => console.error(error.message)
+                });
+            } else if (task) {
+                const taskRequeste : Task = {
+                    id: task.id,
+                    title: formData.title || 'Untitled Task',
+                    description: formData.description || '',
+                    isCompleted: false,
+                    deadline: formData.deadline ? new Date(formData.deadline) : new Date()
+                }
+
+                updateTask(taskRequeste, {
+                    onSuccess: () => {onClose(); console.log("Success")},
+                    onError: (error) => console.error(error.message)
+                });
+            }
+        } else {
+            mutate(formData, {
+                onSuccess: (data) => {
+                    console.log(data.createdAt.toString());
+                    onClose();
+                },
                 onError: (error) => console.error(error.message)
             });
         }
-    } else {
-        mutate(formData, {
-            onSuccess: (data) => {
-                console.log(data.createdAt.toString());
-                onClose();
-            },
-            onError: (error) => console.error(error.message)
-        });
-    }
-  };
+    };
 
   return (
     <>
@@ -86,7 +103,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referen
                 </h3>
             </div>
 
-            <form className="task-form" onSubmit={handleSubmit}>
+            <form className="task-form" onSubmit={(e) => validateSubmit(e)}>
                 <div className="input-group">
                     <label>Title</label>
                     <input
@@ -97,7 +114,6 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referen
                         {...isDeleteModal ? { disabled: true } : {}}
                         value={formData.title}
                         onChange={handleChange}
-                        required
                     />
                 </div>
                 {isDeleteModal ? 
@@ -112,7 +128,6 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referen
                             className="modal-input"
                             value= {formData.deadline ? new Date(formData.deadline).toISOString().slice(0, 10) : ''}
                             onChange={handleChange}
-                            required
                         />
                     </div>
 
@@ -124,7 +139,6 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referen
                             className="modal-input modal-textarea"
                             value={formData.description}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                 </>}
@@ -153,6 +167,31 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referen
                     </button>
                 </div>
             </form>
+            {validationErrors.length > 0 &&
+                <div className="error-container">
+                    <div className="error-header">
+                        {/* You can use an SVG or an icon library like react-icons here */}
+                        <svg 
+                        width="18" 
+                        height="18" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="#b91c1c" 
+                        strokeWidth="2"
+                        >
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        Please correct the following errors:
+                    </div>
+                    <ul className="error-list">
+                        {validationErrors.map((error, index) => (
+                            <li key={index}>{error}</li>
+                        ))}
+                    </ul>
+                </div>
+            }
         </div>
     </div>
     </>
