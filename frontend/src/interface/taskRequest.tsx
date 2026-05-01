@@ -3,4 +3,5 @@ export interface TaskRequest{
     description?: string;
     status?: string;
     deadline?: string;
+    userId?: Number;
 }

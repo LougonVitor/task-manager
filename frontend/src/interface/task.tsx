@@ -6,4 +6,5 @@ export interface Task{
     createdAt?: Date;
     deadline: Date;
     completedAt?: Date;
+    userId?: Number;
 }

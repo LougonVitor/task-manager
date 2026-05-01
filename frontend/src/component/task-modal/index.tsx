@@ -12,9 +12,11 @@ interface TaskModalProps {
   onClose: () => void;
   isCreateModal: boolean;
   isDeleteModal: boolean;
+  referenceId: Number;
 }
 
-export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskModalProps) {
+export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referenceId}: TaskModalProps) {
+
   const { mutate, isPending } = useCreateTask();
   const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
   const { mutate: updateTask, isPending: isEditing } = useUpdateTask();
@@ -24,6 +26,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskMo
     description: task?.description,
     status: task?.isCompleted ? 'completed' : 'in_progress',
     deadline: task?.deadline.toString(),
+    userId: referenceId
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement| HTMLSelectElement>) => {

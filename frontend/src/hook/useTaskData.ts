@@ -4,15 +4,15 @@ import type { Task } from '../interface/task';
 
 const API_URL = 'http://localhost:8080/task';
 
-const fetchTasks = async (): Promise<Task[]> => {
-    const response = await axios.get<Task[]>(API_URL);
+const fetchTasks = async (userId: Number): Promise<Task[]> => {
+    const response = await axios.get<Task[]>(API_URL + `/${userId}`);
     return response.data;
 }
 
-export const useTaskData = () => {
+export const useTaskData = (userId: Number) => {
     return useQuery({
-        queryFn: fetchTasks,
-        queryKey: ['task-data'],
+        queryFn: () => fetchTasks(userId),
+        queryKey: ['task-data', userId],
         retry: 2
     });
 }
