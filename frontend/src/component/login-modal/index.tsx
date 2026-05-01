@@ -2,23 +2,27 @@ import { useState } from 'react';
 import './style.css'
 import { useLoginAuth } from '../../hook/useLoginAuth';
 import { useNavigate } from 'react-router-dom';
+import { useRegisterAuth } from '../../hook/useRegisterAuth';
 
 interface LoginModalProps {
     isCreateView: boolean;
 }
 
 export function LoginModal({ isCreateView }: LoginModalProps) {
-    const {mutate, isPending, isError, error} = useLoginAuth();
+    const {mutate: mutateCreation, isPending, isError, error} = useLoginAuth();
+    const {mutate: mutateRegister} = useRegisterAuth();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [validationError, setValidationError] = useState('');
     const userNavigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
         if(!isCreateView) {
-            mutate({username, password}, {
+            mutateCreation({username, password}, {
                 onSuccess: (data) => {
                     console.log('Login successful:', data.token);
                     // Handle successful login, e.g., store token, redirect, etc.
@@ -28,6 +32,23 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
                 onError: (error) => {
                     console.error('Login failed:', error.message);
                     // Handle login failure, e.g., show error message to user
+                }
+            })
+        } else {
+            if(password != confirmPassword) {
+                setValidationError('Passwords do not match.');
+                return;
+            }
+
+            setValidationError('');
+
+            mutateRegister({username, email, password, role: 'COMMON'}, {
+                onSuccess: (data) => {
+                    console.log('User created successufully :', data);
+                    userNavigate(0);
+                },
+                onError: (error) => {
+                    console.error('Creation failed:', error.message);
                 }
             })
         }
@@ -47,18 +68,16 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
                 value={username}
                 required
             />
-            {isCreateView ?
-            <input
-                type="email"
-                className='login-field' 
-                placeholder='Email'
-                onChange={e => setEmail(e.target.value)}
-                value={email}
-                required
-            />
-            :
-            <></>
-            }
+            {isCreateView && (
+                <input
+                    type="email"
+                    className='login-field' 
+                    placeholder='Email'
+                    onChange={e => setEmail(e.target.value)}
+                    value={email}
+                    required
+                />
+            )}
             <input
                 type="password"
                 className='login-field'
@@ -67,22 +86,23 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
                 value={password}
                 required
             />
-            {isCreateView ?
-            <input
-                type="password"
-                className='login-field'
-                placeholder='Confirm Password'
-                onChange={e => setPassword(e.target.value)}
-                value={password}
-                required
-            />
-            :
-            <></>
-            }
+            {isCreateView && (
+                <input
+                    type="password"
+                    className='login-field'
+                    placeholder='Confirm Password'
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    value={confirmPassword}
+                    required
+                />
+            )}
+
             <button type="submit" className='create-account-button login-field'>
                 {isCreateView ? 'Create Account' : (isPending ? 'Logging in...' : 'Login')}
             </button>
+            
             {isError && <p style={{ color: 'red' }}>{error.message}</p>}
+            {validationError && <p style={{ color: 'red' }}>{validationError}</p>}
         </form>
         </div>
         </>
