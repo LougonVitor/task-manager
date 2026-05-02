@@ -53,7 +53,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referen
             setValidationErrors(currentErros);
             return null;
         } else {
-            handleSubmit
+            handleSubmit()
         };
         
     }
