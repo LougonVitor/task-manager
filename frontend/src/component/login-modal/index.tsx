@@ -15,12 +15,29 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [validationError, setValidationError] = useState('');
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const userNavigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const validateSubmit = (e: React.SubmitEvent) => {
         e.preventDefault();
 
+        const currentErros = [];
+
+        if(!username || username.trim() === "") currentErros.push("Username is required!")
+        if(isCreateView && ( !email || email.trim() === "")) currentErros.push("Email is required!")
+        if(!password || password.trim() === "") currentErros.push("Password is required!")
+        if(isCreateView && ( !confirmPassword || confirmPassword.trim() === "")) currentErros.push("Confirm password is required!")
+        if(isCreateView && ( password != confirmPassword)) currentErros.push('Passwords do not match.')
+
+        if(currentErros.length > 0) {
+            setValidationErrors(currentErros);
+        } else {
+            handleSubmit
+        };
+        
+    }
+
+    const handleSubmit = () => {
         if(!isCreateView) {
             mutateCreation({username, password}, {
                 onSuccess: (data) => {
@@ -35,13 +52,6 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
                 }
             })
         } else {
-            if(password != confirmPassword) {
-                setValidationError('Passwords do not match.');
-                return;
-            }
-
-            setValidationError('');
-
             mutateRegister({username, email, password, role: 'COMMON'}, {
                 onSuccess: (data) => {
                     console.log('User created successufully :', data);
@@ -59,14 +69,13 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
         <div className='input-box'>
         <h1>{isCreateView ? 'Create Account' : 'Login'}</h1>
         <p>Let's get started with your tasks</p>
-        <form action="" method="post" onSubmit={handleSubmit}>
+        <form action="" method="post" onSubmit={validateSubmit}>
             <input
                 type="text"
                 className='login-field' 
                 placeholder='User'
                 onChange={e => setUsername(e.target.value)}
                 value={username}
-                required
             />
             {isCreateView && (
                 <input
@@ -75,7 +84,6 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
                     placeholder='Email'
                     onChange={e => setEmail(e.target.value)}
                     value={email}
-                    required
                 />
             )}
             <input
@@ -84,7 +92,6 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
                 placeholder='Password'
                 onChange={e => setPassword(e.target.value)}
                 value={password}
-                required
             />
             {isCreateView && (
                 <input
@@ -93,7 +100,6 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
                     placeholder='Confirm Password'
                     onChange={e => setConfirmPassword(e.target.value)}
                     value={confirmPassword}
-                    required
                 />
             )}
 
@@ -102,7 +108,38 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
             </button>
             
             {isError && <p style={{ color: 'red' }}>{error.message}</p>}
-            {validationError && <p style={{ color: 'red' }}>{validationError}</p>}
+            {validationErrors.length > 0 &&
+            <div className="error-container">
+                <div className="error-header">
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" strokeWidth="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        Please correct the following errors:
+                    </div>
+                    
+                    {/* Close Button */}
+                    <button 
+                        className="error-close-btn" 
+                        onClick={() => setValidationErrors([])}
+                        aria-label="Close error banner"
+                    >
+                        ✕
+                    </button>
+                </div>
+                
+                <ul className="error-list">
+                    {validationErrors
+                        .filter(error => error && error.trim() !== "")
+                        .map((error, index) => (
+                            <li key={index}>{error}</li>
+                        ))
+                    }
+                </ul>
+            </div>
+            }
         </form>
         </div>
         </>
