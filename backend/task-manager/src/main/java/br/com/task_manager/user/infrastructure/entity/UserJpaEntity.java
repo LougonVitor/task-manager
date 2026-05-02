@@ -1,5 +1,7 @@
 package br.com.task_manager.user.infrastructure.entity;
 
+import br.com.task_manager.user.domain.entity.UserEntity;
+import br.com.task_manager.user.infrastructure.repository.UserJpaAdapter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,4 +27,12 @@ public class UserJpaEntity {
     private String role;
     @Column(name = "dh_creation")
     private LocalDateTime createdAt;
+
+    public UserJpaEntity (UserEntity entity) {
+        this.setUsername(entity.getUsername());
+        this.setEmail(entity.getEmail());
+        this.setPassword(entity.getPassword());
+        this.setCreatedAt(LocalDateTime.now());
+        this.setRole(entity.getRole().getRole());
+    }
 }
