@@ -2,11 +2,9 @@ package br.com.task_manager.task.api.controller;
 
 import br.com.task_manager.task.api.dto.TaskRequestDto;
 import br.com.task_manager.task.api.dto.TaskResponseDto;
-import br.com.task_manager.task.api.mapper.TaskMapper;
+import br.com.task_manager.task.api.mapper.TaskDtoMapper;
 import br.com.task_manager.task.application.dto.CreateResponseTaskCommand;
-import br.com.task_manager.task.application.dto.CreateTaskCommand;
 import br.com.task_manager.task.application.dto.TaskResponse;
-import br.com.task_manager.task.application.dto.UpdateTaskCommand;
 import br.com.task_manager.task.application.service.TaskCreationService;
 import br.com.task_manager.task.application.service.TaskDeletionService;
 import br.com.task_manager.task.application.service.TaskRecoveryService;
@@ -41,17 +39,14 @@ public class TaskController {
 
     @PostMapping("/create")
     public TaskResponseDto createTask(@RequestBody TaskRequestDto request) {
-        CreateTaskCommand taskCommand = new CreateTaskCommand(request.title(), request.description(), request.status(), request.deadline(), request.userId());
+        CreateResponseTaskCommand response = this.creationService.createTask(TaskDtoMapper.toCreateCommand(request));
 
-        CreateResponseTaskCommand response = this.creationService.createTask(taskCommand);
-
-        return TaskMapper.toTaskResponse(response);
+        return TaskDtoMapper.toResponse(response);
     }
 
     @PutMapping("/{id}")
     public void updateTask(@PathVariable long id, @RequestBody TaskRequestDto request) {
-        UpdateTaskCommand taskCommand = new UpdateTaskCommand(request.title(), request.description(), request.status(), request.deadline());
-        this.updateService.updateTask(id, taskCommand);
+        this.updateService.updateTask(id, TaskDtoMapper.toUpdateCommand(request));
     }
 
     @PutMapping("/{id}/status")
