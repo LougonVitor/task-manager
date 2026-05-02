@@ -27,9 +27,25 @@ public class TaskEntity {
         this.setUserId(userId);
     }
 
+    //Creation constructor
+    public TaskEntity (String title, String description, String taskStatus, LocalDateTime createdAt, LocalDate deadline, Long userId) {
+        this.setTitle(title);
+        this.setDescription(description);
+        this.setTaskStatus(TaskStatus.getEnumValue(taskStatus));
+        this.setCreatedAt(createdAt);
+        this.setDeadline(deadline);
+        this.setUserId(userId);
+    }
+
     //No args constructor
     public TaskEntity(){
 
+    }
+
+    public void updateTaskData(String title, String description, LocalDate deadline) {
+        this.setTitle(title);
+        this.setDescription(description);
+        this.setDeadline(deadline);
     }
 
     //Getters and setters
