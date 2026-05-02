@@ -4,8 +4,6 @@ import br.com.task_manager.user.api.dto.AuthenticationRequestDto;
 import br.com.task_manager.user.api.dto.CreateRequestDto;
 import br.com.task_manager.user.api.mapper.UserAuthenticationMapper;
 import br.com.task_manager.user.application.dto.AuthenticationResponse;
-import br.com.task_manager.user.application.dto.AuthenticationUserCommand;
-import br.com.task_manager.user.application.dto.CreateUserCommand;
 import br.com.task_manager.user.application.service.AuthenticationService;
 import br.com.task_manager.user.application.service.CreateUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +15,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("auth")
 public class AuthenticationController {
     @Autowired
-    private AuthenticationService authenticationServiceService;
+    private AuthenticationService authenticationService;
 
     @Autowired
     private CreateUserService createUserService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Validated AuthenticationRequestDto request) {
-        AuthenticationUserCommand serviceDto = UserAuthenticationMapper.toAuthenticationUserCommand(request);
-        AuthenticationResponse response = this.authenticationServiceService.loginAuthentication(serviceDto);
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Validated AuthenticationRequestDto request) {
+        AuthenticationResponse response = this.authenticationService.loginAuthentication(UserAuthenticationMapper.toAuthenticationUserCommand(request));
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Validated CreateRequestDto request) throws Exception{
-        CreateUserCommand createUserCommand = UserAuthenticationMapper.toCreateUserCommand(request);
-        String username = this.createUserService.createUser(createUserCommand);
+    public ResponseEntity<String> register(@RequestBody @Validated CreateRequestDto request) throws Exception{
+        String username = this.createUserService.createUser(UserAuthenticationMapper.toCreateUserCommand(request));
         return ResponseEntity.ok(username);
     }
 }
