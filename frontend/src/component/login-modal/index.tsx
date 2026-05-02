@@ -3,6 +3,7 @@ import './style.css'
 import { useLoginAuth } from '../../hook/useLoginAuth';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterAuth } from '../../hook/useRegisterAuth';
+import { ModalValidate } from '../modal-validate-fields';
 
 interface LoginModalProps {
     isCreateView: boolean;
@@ -18,6 +19,10 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const userNavigate = useNavigate();
 
+    const onCloseModal = () => {
+        setValidationErrors([]);
+    }
+
     const validateSubmit = (e: React.SubmitEvent) => {
         e.preventDefault();
 
@@ -32,13 +37,15 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
         if(currentErros.length > 0) {
             setValidationErrors(currentErros);
         } else {
-            handleSubmit
+            handleSubmit();
         };
         
     }
 
     const handleSubmit = () => {
+        console.log('Arrives here')
         if(!isCreateView) {
+            console.log('Arrives here 1')
             mutateCreation({username, password}, {
                 onSuccess: (data) => {
                     console.log('Login successful:', data.token);
@@ -52,6 +59,7 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
                 }
             })
         } else {
+            console.log('Arrives here 2')
             mutateRegister({username, email, password, role: 'COMMON'}, {
                 onSuccess: (data) => {
                     console.log('User created successufully :', data);
@@ -108,38 +116,7 @@ export function LoginModal({ isCreateView }: LoginModalProps) {
             </button>
             
             {isError && <p style={{ color: 'red' }}>{error.message}</p>}
-            {validationErrors.length > 0 &&
-            <div className="error-container">
-                <div className="error-header">
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" strokeWidth="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        </svg>
-                        Please correct the following errors:
-                    </div>
-                    
-                    {/* Close Button */}
-                    <button 
-                        className="error-close-btn" 
-                        onClick={() => setValidationErrors([])}
-                        aria-label="Close error banner"
-                    >
-                        ✕
-                    </button>
-                </div>
-                
-                <ul className="error-list">
-                    {validationErrors
-                        .filter(error => error && error.trim() !== "")
-                        .map((error, index) => (
-                            <li key={index}>{error}</li>
-                        ))
-                    }
-                </ul>
-            </div>
-            }
+            {validationErrors.length > 0 && <ModalValidate errors={validationErrors} onCloseModal={onCloseModal}/>}
         </form>
         </div>
         </>

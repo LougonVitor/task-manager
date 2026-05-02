@@ -6,6 +6,7 @@ import { useCreateTask } from '../../hook/useCreateTask';
 import { useDeleteTask } from '../../hook/useDeleteTask';
 import { useUpdateTask } from '../../hook/useUpdateTask';
 import React, { useState } from 'react';
+import { ModalValidate } from '../modal-validate-fields';
 
 interface TaskModalProps {
     task?: Task | null;
@@ -167,31 +168,7 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referen
                     </button>
                 </div>
             </form>
-            {validationErrors.length > 0 &&
-                <div className="error-container">
-                    <div className="error-header">
-                        {/* You can use an SVG or an icon library like react-icons here */}
-                        <svg 
-                        width="18" 
-                        height="18" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="#b91c1c" 
-                        strokeWidth="2"
-                        >
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        </svg>
-                        Please correct the following errors:
-                    </div>
-                    <ul className="error-list">
-                        {validationErrors.map((error, index) => (
-                            <li key={index}>{error}</li>
-                        ))}
-                    </ul>
-                </div>
-            }
+            {validationErrors.length > 0 && <ModalValidate errors={validationErrors} onCloseModal={() => {setValidationErrors([])}}/>}
         </div>
     </div>
     </>
