@@ -2,14 +2,12 @@ package br.com.task_manager.task.infrasctructure.repository;
 
 import br.com.task_manager.task.domain.entity.TaskEntity;
 import br.com.task_manager.task.domain.repository.ITaskRepository;
-import br.com.task_manager.task.domain.valueobject.TaskStatus;
 import br.com.task_manager.task.infrasctructure.entity.TaskJpaEntity;
+import br.com.task_manager.task.infrasctructure.mapper.JpaEntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class TaskJpaRepository implements ITaskRepository {
@@ -18,121 +16,42 @@ public class TaskJpaRepository implements ITaskRepository {
 
     @Override
     public List<TaskEntity> getAllTasks() {
-        List<TaskJpaEntity> allJpaTasks = taskJpaRepository.findAll();
-
-        if(!allJpaTasks.isEmpty()) {
-            List<TaskEntity> allTasksEntity = new ArrayList<>();
-
-            for(TaskJpaEntity jpaEntity : allJpaTasks) {
-                allTasksEntity.add( new TaskEntity(
-                        jpaEntity.getId()
-                        , jpaEntity.getTitle()
-                        , jpaEntity.getDescription()
-                        , jpaEntity.getTaskStatus()
-                        , jpaEntity.getCreatedAt()
-                        , jpaEntity.getDeadline()
-                        , jpaEntity.getCompletedAt()
-                        , jpaEntity.getUserId()
-                ));
-            }
-
-            return allTasksEntity;
-        } else {
-            return new ArrayList<TaskEntity>();
-        }
+        return this.taskJpaRepository.findAll().stream().map(JpaEntityMapper::jpaEntityToDomainEntity).toList();
     }
 
     @Override
     public List<TaskEntity> findByUserId(Long userId) {
-        try {
-            return this.taskJpaRepository.findByUserId(userId).stream().map(
-                    jpaEntity -> new TaskEntity(
-                            jpaEntity.getId()
-                            , jpaEntity.getTitle()
-                            , jpaEntity.getDescription()
-                            , jpaEntity.getTaskStatus()
-                            , jpaEntity.getCreatedAt()
-                            , jpaEntity.getDeadline()
-                            , jpaEntity.getCompletedAt()
-                            , jpaEntity.getUserId()
-                    )).toList();
-        } catch(Exception ex) {
-            System.out.println(ex.getMessage());
-            return null;
-        }
+        return this.taskJpaRepository.findByUserId(userId).stream().map(JpaEntityMapper::jpaEntityToDomainEntity).toList();
     }
 
     @Override
-    public TaskEntity createTask(TaskEntity entity) {
-        TaskJpaEntity jpaEntity = new TaskJpaEntity(
-                entity.getId(),
-                entity.getTitle(),
-                entity.getDescription(),
-                entity.getTaskStatus(),
-                entity.getCreatedAt(),
-                entity.getDeadline(),
-                entity.getCompletedAt(),
-                entity.getUserId()
-        );
+    public TaskEntity createTask(TaskEntity entityRequest) {
+        TaskJpaEntity jpaEntityCreated = this.taskJpaRepository.save(new TaskJpaEntity(entityRequest));
 
-        TaskJpaEntity dbEntityCreated = this.taskJpaRepository.save(jpaEntity);
-
-        return new TaskEntity(
-                dbEntityCreated.getId(),
-                dbEntityCreated.getTitle(),
-                dbEntityCreated.getDescription(),
-                dbEntityCreated.getTaskStatus(),
-                dbEntityCreated.getCreatedAt(),
-                dbEntityCreated.getDeadline(),
-                dbEntityCreated.getCompletedAt(),
-                dbEntityCreated.getUserId()
-        );
+        return JpaEntityMapper.jpaEntityToDomainEntity(jpaEntityCreated);
     }
 
     @Override
-    public TaskEntity updateTask(long id, TaskEntity entity) {
-        Optional<TaskJpaEntity> entityFound = this.taskJpaRepository.findById(id);
+    public TaskEntity updateTask(long id, TaskEntity entityRequest) {
+        TaskJpaEntity jpaEntityFound = this.taskJpaRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found!"));
 
-        if(entityFound.isEmpty()) throw new RuntimeException("Task not found");
+        jpaEntityFound.updateTaskData(entityRequest);
 
-        entityFound.get().setTitle(entity.getTitle());
-        entityFound.get().setDeadline(entity.getDeadline());
-        entityFound.get().setDescription(entity.getDescription());
-
-        TaskJpaEntity dbEntityUpdated = this.taskJpaRepository.save(entityFound.get());
-
-        return new TaskEntity(
-                dbEntityUpdated.getId(),
-                dbEntityUpdated.getTitle(),
-                dbEntityUpdated.getDescription(),
-                dbEntityUpdated.getTaskStatus(),
-                dbEntityUpdated.getCreatedAt(),
-                dbEntityUpdated.getDeadline(),
-                dbEntityUpdated.getCompletedAt(),
-                dbEntityUpdated.getUserId()
-        );
+        return JpaEntityMapper.jpaEntityToDomainEntity(this.taskJpaRepository.save(jpaEntityFound));
     }
 
     @Override
     public void updateTaskStatus(long id) {
-        Optional<TaskJpaEntity> entityFound = this.taskJpaRepository.findById(id);
+        TaskJpaEntity entityFound = this.taskJpaRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found!"));
 
-        if(entityFound.isEmpty()) throw new RuntimeException("Task not found");
+        entityFound.toggleStatus();
 
-        entityFound.get().setTaskStatus(
-                entityFound.get().getTaskStatus() == TaskStatus.COMPLETED
-                    ? TaskStatus.IN_PROGRESS
-                    : TaskStatus.COMPLETED
-        );
-
-        this.taskJpaRepository.save(entityFound.get());
+        this.taskJpaRepository.save(entityFound);
     }
 
     @Override
     public void deleteById(long id) {
-        Optional<TaskJpaEntity> entityFound = this.taskJpaRepository.findById(id);
-
-        if(entityFound.isEmpty()) throw new RuntimeException("Task not found");
+        this.taskJpaRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
 
         this.taskJpaRepository.deleteById(id);
     }

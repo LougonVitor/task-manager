@@ -1,5 +1,6 @@
 package br.com.task_manager.task.infrasctructure.entity;
 
+import br.com.task_manager.task.domain.entity.TaskEntity;
 import br.com.task_manager.task.domain.valueobject.TaskStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,28 @@ public class TaskJpaEntity {
     private LocalDateTime completedAt;
     @Column(name = "id_user")
     private Long userId;
+
+    public TaskJpaEntity(TaskEntity entity) {
+        this.setId(entity.getId());
+        this.setTitle(entity.getTitle());
+        this.setDescription(entity.getDescription());
+        this.setTaskStatus(entity.getTaskStatus());
+        this.setCreatedAt(entity.getCreatedAt());
+        this.setDeadline(entity.getDeadline());
+        this.setCompletedAt(entity.getCompletedAt());
+        this.setUserId(entity.getUserId());
+    }
+
+    public void toggleStatus() {
+        this.setTaskStatus(this.getTaskStatus() == TaskStatus.COMPLETED
+            ? TaskStatus.IN_PROGRESS
+            : TaskStatus.COMPLETED
+        );
+    }
+
+    public void updateTaskData(TaskEntity entityRequest) {
+        this.setTitle(entityRequest.getTitle());
+        this.setDescription(entityRequest.getDescription());
+        this.setDeadline(entityRequest.getDeadline());
+    }
 }
