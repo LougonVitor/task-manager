@@ -48,6 +48,13 @@ public class TaskEntity {
         this.setDeadline(deadline);
     }
 
+    public void toggleStatus() {
+        this.setTaskStatus(this.getTaskStatus() == TaskStatus.COMPLETED
+                ? TaskStatus.IN_PROGRESS
+                : TaskStatus.COMPLETED
+        );
+    }
+
     //Getters and setters
     public Long getId() {
         return id;

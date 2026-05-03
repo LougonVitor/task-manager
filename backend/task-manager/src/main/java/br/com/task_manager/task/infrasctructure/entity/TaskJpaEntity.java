@@ -44,13 +44,6 @@ public class TaskJpaEntity {
         this.setUserId(entity.getUserId());
     }
 
-    public void toggleStatus() {
-        this.setTaskStatus(this.getTaskStatus() == TaskStatus.COMPLETED
-            ? TaskStatus.IN_PROGRESS
-            : TaskStatus.COMPLETED
-        );
-    }
-
     public void updateTaskData(TaskEntity entityRequest) {
         this.setTitle(entityRequest.getTitle());
         this.setDescription(entityRequest.getDescription());

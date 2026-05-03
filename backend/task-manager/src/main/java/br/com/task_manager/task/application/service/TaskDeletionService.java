@@ -9,7 +9,8 @@ public class TaskDeletionService {
     @Autowired
     private ITaskRepository taskRepository;
 
-    public void deleteById(long id) {
+    public void deleteByTaskId(long id) {
+        this.taskRepository.findTaskById(id);
         this.taskRepository.deleteById(id);
     }
 }

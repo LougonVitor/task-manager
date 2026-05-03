@@ -16,7 +16,7 @@ public class TaskRecoveryService {
         return this.taskRepository.getAllTasks().stream().map(TaskResponse::new).toList();
     }
 
-    public List<TaskResponse> getTasksByUserId(Long userId) {
+    public List<TaskResponse> getCurrentUserTasks(Long userId) {
         return  this.taskRepository.findByUserId(userId).stream().map(TaskResponse::new).toList();
     }
 }

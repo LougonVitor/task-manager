@@ -3,7 +3,7 @@ package br.com.task_manager.task.infrasctructure.repository;
 import br.com.task_manager.task.domain.entity.TaskEntity;
 import br.com.task_manager.task.domain.repository.ITaskRepository;
 import br.com.task_manager.task.infrasctructure.entity.TaskJpaEntity;
-import br.com.task_manager.task.infrasctructure.mapper.JpaEntityMapper;
+import br.com.task_manager.task.infrasctructure.mapper.TaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,43 +16,39 @@ public class TaskJpaRepository implements ITaskRepository {
 
     @Override
     public List<TaskEntity> getAllTasks() {
-        return this.taskJpaRepository.findAll().stream().map(JpaEntityMapper::jpaEntityToDomainEntity).toList();
+        return this.taskJpaRepository.findAll().stream().map(TaskMapper::toEntity).toList();
     }
 
     @Override
     public List<TaskEntity> findByUserId(Long userId) {
-        return this.taskJpaRepository.findByUserId(userId).stream().map(JpaEntityMapper::jpaEntityToDomainEntity).toList();
+        return this.taskJpaRepository.findByUserId(userId).stream().map(TaskMapper::toEntity).toList();
     }
 
     @Override
-    public TaskEntity createTask(TaskEntity entityRequest) {
+    public TaskEntity addNewTask(TaskEntity entityRequest) {
         TaskJpaEntity jpaEntityCreated = this.taskJpaRepository.save(new TaskJpaEntity(entityRequest));
 
-        return JpaEntityMapper.jpaEntityToDomainEntity(jpaEntityCreated);
+        return TaskMapper.toEntity(jpaEntityCreated);
     }
 
     @Override
-    public TaskEntity updateTask(long id, TaskEntity entityRequest) {
-        TaskJpaEntity jpaEntityFound = this.taskJpaRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found!"));
+    public void updateTaskData(long id, TaskEntity entityRequest) {
+        TaskJpaEntity jpaEntityFound = TaskMapper.toJpaEntity(this.findTaskById(id));
 
         jpaEntityFound.updateTaskData(entityRequest);
 
-        return JpaEntityMapper.jpaEntityToDomainEntity(this.taskJpaRepository.save(jpaEntityFound));
-    }
-
-    @Override
-    public void updateTaskStatus(long id) {
-        TaskJpaEntity entityFound = this.taskJpaRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found!"));
-
-        entityFound.toggleStatus();
-
-        this.taskJpaRepository.save(entityFound);
+        this.taskJpaRepository.save(jpaEntityFound);
     }
 
     @Override
     public void deleteById(long id) {
-        this.taskJpaRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
-
         this.taskJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public TaskEntity findTaskById(long id) {
+        return TaskMapper.toEntity(
+            this.taskJpaRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found!"))
+        );
     }
 }

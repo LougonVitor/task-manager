@@ -1,10 +1,9 @@
 package br.com.task_manager.task.api.controller;
 
-import br.com.task_manager.task.api.dto.TaskRequestDto;
-import br.com.task_manager.task.api.dto.TaskResponseDto;
-import br.com.task_manager.task.api.mapper.TaskDtoMapper;
-import br.com.task_manager.task.application.dto.CreateResponseTaskCommand;
-import br.com.task_manager.task.application.dto.TaskResponse;
+import br.com.task_manager.task.api.dto.TaskRequest;
+import br.com.task_manager.task.api.dto.TaskResponse;
+import br.com.task_manager.task.api.mapper.TaskMapper;
+import br.com.task_manager.task.application.dto.TaskMutationResponse;
 import br.com.task_manager.task.application.service.TaskCreationService;
 import br.com.task_manager.task.application.service.TaskDeletionService;
 import br.com.task_manager.task.application.service.TaskRecoveryService;
@@ -28,25 +27,25 @@ public class TaskController {
 
 
     @GetMapping
-    public List<TaskResponse> getAllTasks() {
+    public List<br.com.task_manager.task.application.dto.TaskResponse> getAllTasks() {
         return recoveryService.getAllTasks();
     }
 
     @GetMapping("/{userId}")
-    public List<TaskResponse> getTasksByUserId(@PathVariable Long userId) {
-        return recoveryService.getTasksByUserId(userId);
+    public List<br.com.task_manager.task.application.dto.TaskResponse> getCurrentUserTasks(@PathVariable Long userId) {
+        return recoveryService.getCurrentUserTasks(userId);
     }
 
     @PostMapping("/create")
-    public TaskResponseDto createTask(@RequestBody TaskRequestDto request) {
-        CreateResponseTaskCommand response = this.creationService.createTask(TaskDtoMapper.toCreateCommand(request));
+    public TaskResponse createTask(@RequestBody TaskRequest request) {
+        TaskMutationResponse response = this.creationService.saveTask(TaskMapper.toCreateCommand(request));
 
-        return TaskDtoMapper.toResponse(response);
+        return TaskMapper.toResponse(response);
     }
 
     @PutMapping("/{id}")
-    public void updateTask(@PathVariable long id, @RequestBody TaskRequestDto request) {
-        this.updateService.updateTask(id, TaskDtoMapper.toUpdateCommand(request));
+    public void updateTask(@PathVariable long id, @RequestBody TaskRequest request) {
+        this.updateService.updateTask(id, TaskMapper.toUpdateCommand(request));
     }
 
     @PutMapping("/{id}/status")
@@ -56,6 +55,6 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable long id) {
-        this.deletionService.deleteById(id);
+        this.deletionService.deleteByTaskId(id);
     }
 }
