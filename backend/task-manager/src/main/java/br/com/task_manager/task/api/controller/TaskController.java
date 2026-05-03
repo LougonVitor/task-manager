@@ -1,9 +1,10 @@
 package br.com.task_manager.task.api.controller;
 
-import br.com.task_manager.task.api.dto.TaskRequest;
-import br.com.task_manager.task.api.dto.TaskResponse;
-import br.com.task_manager.task.api.mapper.TaskMapper;
-import br.com.task_manager.task.application.dto.TaskMutationResponse;
+import br.com.task_manager.task.api.dto.TaskRequestDto;
+import br.com.task_manager.task.api.dto.TaskResponseDto;
+import br.com.task_manager.task.api.mapper.TaskApiMapper;
+import br.com.task_manager.task.application.dto.MutateTaskResponseDto;
+import br.com.task_manager.task.application.dto.TaskApplicationResponseDto;
 import br.com.task_manager.task.application.service.TaskCreationService;
 import br.com.task_manager.task.application.service.TaskDeletionService;
 import br.com.task_manager.task.application.service.TaskRecoveryService;
@@ -17,44 +18,44 @@ import java.util.List;
 @RequestMapping("task")
 public class TaskController {
     @Autowired
-    private TaskRecoveryService recoveryService;
+    private TaskRecoveryService taskRecoveryService;
     @Autowired
-    private TaskCreationService creationService;
+    private TaskCreationService taskCreationService;
     @Autowired
-    private TaskDeletionService deletionService;
+    private TaskDeletionService taskDeletionService;
     @Autowired
-    private TaskUpdateService updateService;
+    private TaskUpdateService taskUpdateService;
 
 
     @GetMapping
-    public List<br.com.task_manager.task.application.dto.TaskResponse> getAllTasks() {
-        return recoveryService.getAllTasks();
+    public List<TaskApplicationResponseDto> getAllTasks() {
+        return taskRecoveryService.getAllTasks();
     }
 
     @GetMapping("/{userId}")
-    public List<br.com.task_manager.task.application.dto.TaskResponse> getCurrentUserTasks(@PathVariable Long userId) {
-        return recoveryService.getCurrentUserTasks(userId);
+    public List<TaskApplicationResponseDto> getCurrentUserTasks(@PathVariable Long userId) {
+        return taskRecoveryService.getCurrentUserTasks(userId);
     }
 
     @PostMapping("/create")
-    public TaskResponse createTask(@RequestBody TaskRequest request) {
-        TaskMutationResponse response = this.creationService.saveTask(TaskMapper.toCreateCommand(request));
+    public TaskResponseDto createTask(@RequestBody TaskRequestDto request) {
+        MutateTaskResponseDto response = this.taskCreationService.save(TaskApiMapper.toCreateCommand(request));
 
-        return TaskMapper.toResponse(response);
+        return TaskApiMapper.toResponse(response);
     }
 
     @PutMapping("/{id}")
-    public void updateTask(@PathVariable long id, @RequestBody TaskRequest request) {
-        this.updateService.updateTask(id, TaskMapper.toUpdateCommand(request));
+    public void updateTask(@PathVariable long id, @RequestBody TaskRequestDto request) {
+        this.taskUpdateService.update(id, TaskApiMapper.toUpdateCommand(request));
     }
 
     @PutMapping("/{id}/status")
     public void updateTaskStatus(@PathVariable long id) {
-        this.updateService.updateTaskStatus(id);
+        this.taskUpdateService.updateTaskStatus(id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable long id) {
-        this.deletionService.deleteByTaskId(id);
+        this.taskDeletionService.deleteByTaskId(id);
     }
 }

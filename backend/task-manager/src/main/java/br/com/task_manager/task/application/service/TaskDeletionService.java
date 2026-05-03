@@ -10,7 +10,7 @@ public class TaskDeletionService {
     private ITaskRepository taskRepository;
 
     public void deleteByTaskId(long id) {
-        this.taskRepository.findTaskById(id);
+        this.taskRepository.findById(id);
         this.taskRepository.deleteById(id);
     }
 }

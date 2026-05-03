@@ -12,11 +12,11 @@ public class TaskRecoveryService {
     @Autowired
     private ITaskRepository taskRepository;
 
-    public List<TaskResponse> getAllTasks() {
-        return this.taskRepository.getAllTasks().stream().map(TaskResponse::new).toList();
+    public List<TaskApplicationResponseDto> getAllTasks() {
+        return this.taskRepository.getAllTasks().stream().map(TaskApplicationResponseDto::new).toList();
     }
 
-    public List<TaskResponse> getCurrentUserTasks(Long userId) {
-        return  this.taskRepository.findByUserId(userId).stream().map(TaskResponse::new).toList();
+    public List<TaskApplicationResponseDto> getCurrentUserTasks(Long userId) {
+        return  this.taskRepository.findByUserId(userId).stream().map(TaskApplicationResponseDto::new).toList();
     }
 }

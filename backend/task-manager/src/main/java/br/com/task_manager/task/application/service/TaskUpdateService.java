@@ -11,19 +11,19 @@ public class TaskUpdateService {
     @Autowired
     private ITaskRepository taskRepository;
 
-    public void updateTask(long id, UpdateTaskCommand command) {
+    public void update(long id, UpdateTaskCommand command) {
         TaskEntity taskEntity = new TaskEntity();
 
         taskEntity.updateTaskData(command.title(), command.description(), command.deadline());
 
-        this.taskRepository.updateTaskData(id, taskEntity);
+        this.taskRepository.updateData(id, taskEntity);
     }
 
     public void updateTaskStatus(long id) {
-        TaskEntity entity = this.taskRepository.findTaskById(id);
+        TaskEntity entity = this.taskRepository.findById(id);
 
         entity.toggleStatus();
 
-        this.taskRepository.updateTaskData(id, entity);
+        this.taskRepository.updateData(id, entity);
     }
 }

@@ -1,14 +1,14 @@
 package br.com.task_manager.task.application.mapper;
 
 import br.com.task_manager.task.application.dto.CreateTaskCommand;
-import br.com.task_manager.task.application.dto.TaskMutationResponse;
+import br.com.task_manager.task.application.dto.MutateTaskResponseDto;
 import br.com.task_manager.task.domain.entity.TaskEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
-public class TaskMapper {
+public class TaskApplicationMapper {
     /**
      * Converts a {@link CreateTaskCommand} containing the details of the task
      * creation request into a domain-level {@link TaskEntity}. It initializes the
@@ -29,14 +29,14 @@ public class TaskMapper {
     }
 
     /**
-     * Converts a domain-level {@link TaskEntity} into a {@link TaskMutationResponse}
+     * Converts a domain-level {@link TaskEntity} into a {@link MutateTaskResponseDto}
      * to be returned to the application or presentation layers after an operation.
      *
      * @param entity the domain entity representing the current state of the task
      * @return a {@code TaskMutationResponse} carrying the identifying details of the mutation
      */
-    public static TaskMutationResponse toMutationResponse(TaskEntity entity) {
-        return new TaskMutationResponse(
+    public static MutateTaskResponseDto toMutationResponse(TaskEntity entity) {
+        return new MutateTaskResponseDto(
                 entity.getId(),
                 entity.getTitle(),
                 entity.getCreatedAt()
