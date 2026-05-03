@@ -3,7 +3,7 @@ package br.com.task_manager.user.infrastructure.repository;
 import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.repository.IUserRepository;
 import br.com.task_manager.user.infrastructure.entity.UserJpaEntity;
-import br.com.task_manager.user.infrastructure.mapper.JpaMapper;
+import br.com.task_manager.user.infrastructure.mapper.UserJpaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,8 +13,8 @@ public class UserJpaAdapter implements IUserRepository {
     private UserJpaRepository userJpaRepository;
 
     @Override
-    public UserEntity createUser(UserEntity entity) {
-        return JpaMapper.toEntity(this.userJpaRepository.save(new UserJpaEntity(entity)));
+    public UserEntity create(UserEntity entity) {
+        return UserJpaMapper.toEntity(this.userJpaRepository.save(new UserJpaEntity(entity)));
     }
 
     @Override
@@ -23,6 +23,6 @@ public class UserJpaAdapter implements IUserRepository {
 
         if(userJpaEntity == null) return null;
 
-        return JpaMapper.toEntity(userJpaEntity);
+        return UserJpaMapper.toEntity(userJpaEntity);
     }
 }

@@ -6,6 +6,6 @@ import org.apache.catalina.User;
 import java.util.Optional;
 
 public interface IUserRepository {
-    UserEntity createUser(UserEntity entity);
+    UserEntity create(UserEntity entity);
     UserEntity findByUsername(String username);
 }
