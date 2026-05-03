@@ -20,7 +20,7 @@ public class TaskUpdateService {
     }
 
     public void updateTaskStatus(long id) {
-        TaskEntity entity = this.taskRepository.findById(id);
+        TaskEntity entity = this.taskRepository.findTaskById(id);
 
         entity.toggleStatus();
 

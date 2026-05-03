@@ -48,5 +48,6 @@ public class TaskJpaEntity {
         this.setTitle(entityRequest.getTitle());
         this.setDescription(entityRequest.getDescription());
         this.setDeadline(entityRequest.getDeadline());
+        if(entityRequest.getTaskStatus() != null) this.setTaskStatus(entityRequest.getTaskStatus());
     }
 }

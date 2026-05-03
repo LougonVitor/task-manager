@@ -33,7 +33,7 @@ public class TaskJpaRepository implements ITaskRepository {
 
     @Override
     public void updateData(long id, TaskEntity entityRequest) {
-        TaskJpaEntity jpaEntityFound = TaskMapper.toJpaEntity(this.findById(id));
+        TaskJpaEntity jpaEntityFound = TaskMapper.toJpaEntity(this.findTaskById(id));
         jpaEntityFound.updateTaskData(entityRequest);
 
         this.taskJpaRepository.save(jpaEntityFound);
@@ -45,7 +45,7 @@ public class TaskJpaRepository implements ITaskRepository {
     }
 
     @Override
-    public TaskEntity findById(long id) {
+    public TaskEntity findTaskById(long id) {
         return TaskMapper.toEntity(
             this.taskJpaRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found!"))
         );

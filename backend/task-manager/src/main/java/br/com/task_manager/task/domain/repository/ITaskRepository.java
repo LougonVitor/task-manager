@@ -9,5 +9,5 @@ public interface ITaskRepository {
     TaskEntity addNewTask(TaskEntity entity);
     void updateData(long id, TaskEntity entity);
     void deleteById(long id);
-    TaskEntity findById(long id);
+    TaskEntity findTaskById(long id);
 }
