@@ -1,14 +1,18 @@
 package br.com.task_manager.user.infrastructure.entity;
 
+import java.time.LocalDateTime;
+
 import br.com.task_manager.user.domain.entity.UserEntity;
-import br.com.task_manager.user.infrastructure.repository.UserJpaAdapter;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity(name = "users")
 @Table(name = "users")
