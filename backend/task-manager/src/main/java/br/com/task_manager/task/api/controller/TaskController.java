@@ -9,6 +9,8 @@ import br.com.task_manager.task.application.service.TaskCreationService;
 import br.com.task_manager.task.application.service.TaskDeletionService;
 import br.com.task_manager.task.application.service.TaskRecoveryService;
 import br.com.task_manager.task.application.service.TaskUpdateService;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,14 +40,14 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public TaskResponseDto createTask(@RequestBody TaskRequestDto request) {
+    public TaskResponseDto createTask(@Valid @RequestBody TaskRequestDto request) {
         MutateTaskResponseDto response = this.taskCreationService.save(TaskApiMapper.toCreateCommand(request));
 
         return TaskApiMapper.toResponse(response);
     }
 
     @PutMapping("/{id}")
-    public void updateTask(@PathVariable long id, @RequestBody TaskRequestDto request) {
+    public void updateTask(@PathVariable long id, @Valid @RequestBody TaskRequestDto request) {
         this.taskUpdateService.update(id, TaskApiMapper.toUpdateCommand(request));
     }
 
