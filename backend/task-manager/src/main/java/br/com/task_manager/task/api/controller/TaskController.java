@@ -12,6 +12,7 @@ import br.com.task_manager.task.application.service.TaskUpdateService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,30 +35,30 @@ public class TaskController {
         return taskRecoveryService.getAllTasks();
     }
 
-    @GetMapping("/{userId}")
-    public List<TaskApplicationResponseDto> getCurrentUserTasks(@PathVariable Long userId) {
-        return taskRecoveryService.getCurrentUserTasks(userId);
+    @GetMapping("/my-tasks")
+    public List<TaskApplicationResponseDto> getCurrentUserTasks(Authentication authentication) {
+        return taskRecoveryService.getCurrentUserTasks((Long) authentication.getPrincipal());
     }
 
     @PostMapping("/create")
-    public TaskResponseDto createTask(@Valid @RequestBody TaskRequestDto request) {
-        MutateTaskResponseDto response = this.taskCreationService.save(TaskApiMapper.toCreateCommand(request));
+    public TaskResponseDto createTask(@Valid @RequestBody TaskRequestDto request, Authentication authentication) {
+        MutateTaskResponseDto response = this.taskCreationService.save(TaskApiMapper.toCreateCommand(request), (Long) authentication.getPrincipal());
 
         return TaskApiMapper.toResponse(response);
     }
 
     @PutMapping("/{id}")
-    public void updateTask(@PathVariable long id, @Valid @RequestBody TaskRequestDto request) {
-        this.taskUpdateService.update(id, TaskApiMapper.toUpdateCommand(request));
+    public void updateTask(@PathVariable long id, @Valid @RequestBody TaskRequestDto request, Authentication authentication) {
+        this.taskUpdateService.updateData(id, TaskApiMapper.toUpdateCommand(request), (Long) authentication.getPrincipal());
     }
 
     @PutMapping("/{id}/status")
-    public void updateTaskStatus(@PathVariable long id) {
-        this.taskUpdateService.updateTaskStatus(id);
+    public void updateTaskStatus(@PathVariable long id, Authentication authentication) {
+        this.taskUpdateService.toggleStatus(id, (Long) authentication.getPrincipal());
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTask(@PathVariable long id) {
-        this.taskDeletionService.deleteByTaskId(id);
+    public void deleteTask(@PathVariable long id, Authentication authentication) {
+        this.taskDeletionService.deleteById(id, (Long) authentication.getPrincipal());
     }
 }

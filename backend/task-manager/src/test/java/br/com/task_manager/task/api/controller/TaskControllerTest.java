@@ -6,12 +6,16 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
@@ -28,6 +32,8 @@ import br.com.task_manager.task.application.service.TaskCreationService;
 import br.com.task_manager.task.application.service.TaskDeletionService;
 import br.com.task_manager.task.application.service.TaskRecoveryService;
 import br.com.task_manager.task.application.service.TaskUpdateService;
+
+import java.util.List;
 
 @WebMvcTest(TaskController.class)
 @Import(GlobalExceptionHandler.class)
@@ -58,29 +64,27 @@ public class TaskControllerTest {
 
     @BeforeEach
     void setup() {
-        invalidRequest = new TaskRequestDto(null, null, null, null, null);
+        invalidRequest = new TaskRequestDto(null, null, null, null);
     }
 
-    private ResultActions expectValidationErros(ResultActions result) throws Exception {
+    private ResultActions expectValidationErrors(ResultActions result) throws Exception {
         return result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.title").value("Title cannot be null."))
-            .andExpect(jsonPath("$.description").value("Description cannot be null."))
-            .andExpect(jsonPath("$.status").value("Status field must have a value."))
-            .andExpect(jsonPath("$.deadline").value("All tasks must have a deadline."));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Title cannot be null."))
+                .andExpect(jsonPath("$.description").value("Description cannot be null."))
+                .andExpect(jsonPath("$.deadline").value("All tasks must have a deadline."));
     }
 
     @Test
     @WithMockUser
     void shouldReturnBadRequest_WhenCreateRequestIsInvalid() throws Exception {
         ResultActions result = mockMvc.perform(post("/task/create")
-            .with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(invalidRequest))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest))
         );
 
-        expectValidationErros(result);
-
+        expectValidationErrors(result);
         Mockito.verifyNoInteractions(taskCreationService);
     }
 
@@ -88,13 +92,36 @@ public class TaskControllerTest {
     @WithMockUser
     void shouldReturnBadRequest_WhenUpdateRequestIsInvalid() throws Exception {
         ResultActions result = mockMvc.perform(put("/task/1")
-            .with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(invalidRequest))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest))
         );
 
-        expectValidationErros(result);
-
+        expectValidationErrors(result);
         Mockito.verifyNoInteractions(taskUpdateService);
+    }
+
+    @Test
+    void shouldReturnUnauthorized_WhenAccessingMyTasksWithoutToken() throws Exception {
+        mockMvc.perform(get("/task/my-tasks"))
+                .andExpect(status().isUnauthorized());
+
+        Mockito.verifyNoInteractions(taskRecoveryService);
+    }
+
+    @Test
+    @WithMockUser
+    void shouldReturnOk_WhenAccessingMyTasksWithValidToken() throws Exception {
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                1L,   // <-- Long as principal, same as SecurityFilter sets
+                null,
+                List.of(new SimpleGrantedAuthority("ROLE_USER"))
+        );
+
+        mockMvc.perform(get("/task/my-tasks")
+                    .with(csrf())
+                    .with(authentication(auth))
+                )
+                .andExpect(status().isOk());
     }
 }

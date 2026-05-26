@@ -14,13 +14,10 @@ public record TaskRequestDto(
     @NotBlank(message = "Description cannot be null.")
     String description
     
-    , 
-    @NotBlank(message = "Status field must have a value.")
+    ,
     String status
     
     , 
     @NotNull(message = "All tasks must have a deadline.")
-    LocalDate deadline
-    
-    , Long userId) {
+    LocalDate deadline) {
 }

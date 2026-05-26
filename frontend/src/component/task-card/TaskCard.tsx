@@ -1,5 +1,5 @@
 import type { Task } from '../../interface/task';
-import './style.css';
+import './TaskCard.css';
 import { Check, Edit2, Trash2, Bookmark } from 'lucide-react';
 
 export interface TaskProps {

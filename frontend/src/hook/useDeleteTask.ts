@@ -4,7 +4,11 @@ import axios from "axios";
 const API_URL = 'http://localhost:8080/task';
 
 const deleteData = async (id?: number) => {
-    const response = await axios.delete(API_URL + `/${id}`);
+    const response = await axios.delete(API_URL + `/${id}`, {
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
     return response;
 }
 

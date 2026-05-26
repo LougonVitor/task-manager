@@ -1,5 +1,6 @@
 package br.com.task_manager.task.domain.entity;
 
+import br.com.task_manager.task.domain.exception.AccessDeniedException;
 import br.com.task_manager.task.domain.valueobject.TaskStatus;
 
 import java.time.LocalDate;
@@ -37,11 +38,6 @@ public class TaskEntity {
         this.setUserId(userId);
     }
 
-    //No args constructor
-    public TaskEntity(){
-
-    }
-
     public void updateTaskData(String title, String description, LocalDate deadline) {
         this.setTitle(title);
         this.setDescription(description);
@@ -54,6 +50,13 @@ public class TaskEntity {
                 : TaskStatus.COMPLETED
         );
     }
+
+    public void validateOwnership(Long currentUserId) {
+        if(!this.getUserId().equals(currentUserId)) throw new AccessDeniedException("The logged-in user does not have access to this task.");
+    }
+
+
+
 
     //Getters and setters
     public Long getId() {

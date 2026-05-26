@@ -1,22 +1,21 @@
 import { Plus } from 'lucide-react';
-import './style.css';
+import './TaskModal.css';
 import type { Task } from '../../interface/task';
 import type { TaskRequest } from '../../interface/taskRequest';
 import { useCreateTask } from '../../hook/useCreateTask';
 import { useDeleteTask } from '../../hook/useDeleteTask';
 import { useUpdateTask } from '../../hook/useUpdateTask';
 import React, { useState } from 'react';
-import { ModalValidate } from '../modal-validate-fields';
+import { ModalValidate } from '../validation-error-banner/ValidationErrorBanner';
 
 interface TaskModalProps {
     task?: Task | null;
     onClose: () => void;
     isCreateModal: boolean;
     isDeleteModal: boolean;
-    referenceId: Number;
 }
 
-export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referenceId}: TaskModalProps) {
+export function TaskModal({ task, onClose, isCreateModal, isDeleteModal}: TaskModalProps) {
 
     const { mutate, isPending } = useCreateTask();
     const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
@@ -26,9 +25,8 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referen
     const [formData, setFormData] = useState<TaskRequest>({
         title: task?.title,
         description: task?.description,
-        status: task?.isCompleted ? 'completed' : 'in_progress',
-        deadline: task?.deadline.toString(),
-        userId: referenceId
+        status: task?.isCompleted ? 'COMPLETED' : 'IN_PROGRESS',
+        deadline: task?.deadline.toString()
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement| HTMLSelectElement>) => {
@@ -60,10 +58,6 @@ export function TaskModal({ task, onClose, isCreateModal, isDeleteModal, referen
 
     const handleSubmit = async () => {
         if(!isCreateModal) {
-            console.log(task?.userId)
-            console.log(referenceId)
-            if (task?.userId != referenceId) return console.error("You cannot modify a task that is not yours!");
-            
             if (isDeleteModal && task?.id) {
                 deleteTask(task.id, {
                     onSuccess: () => {onClose()},

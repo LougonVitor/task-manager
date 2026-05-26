@@ -2,28 +2,41 @@ package br.com.task_manager.task.application.service;
 
 import br.com.task_manager.task.application.dto.UpdateTaskCommand;
 import br.com.task_manager.task.domain.entity.TaskEntity;
+import br.com.task_manager.task.domain.exception.ResourceNotFoundException;
 import br.com.task_manager.task.domain.repository.ITaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TaskUpdateService {
-    @Autowired
-    private ITaskRepository taskRepository;
+    private final ITaskRepository taskRepository;
 
-    public void update(long id, UpdateTaskCommand command) {
-        TaskEntity taskEntity = new TaskEntity();
-
-        taskEntity.updateTaskData(command.title(), command.description(), command.deadline());
-
-        this.taskRepository.updateData(id, taskEntity);
+    public TaskUpdateService(ITaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
     }
 
-    public void updateTaskStatus(long id) {
-        TaskEntity entity = this.taskRepository.findTaskById(id);
+    public void updateData(long taskId, UpdateTaskCommand command, Long currentUserId) {
+        TaskEntity entity = this.fetchTaskData(taskId);
 
+        entity.validateOwnership(currentUserId);
+        entity.updateTaskData(command.title(), command.description(), command.deadline());
+
+        this.update(entity);
+    }
+
+    public void toggleStatus(long taskId, Long currentUserId) {
+        TaskEntity entity = this.fetchTaskData(taskId);
+
+        entity.validateOwnership(currentUserId);
         entity.toggleStatus();
 
-        this.taskRepository.updateData(id, entity);
+        this.update(entity);
+    }
+
+    private TaskEntity fetchTaskData(Long taskId) {
+        return this.taskRepository.findTaskById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found by id!"));
+    }
+
+    private void update(TaskEntity entity) {
+        this.taskRepository.update(entity);
     }
 }

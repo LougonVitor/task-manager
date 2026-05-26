@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import loginImage from '../../assets/login_imgs/login_image.png';
-import { LoginModal } from '../../component/login-modal';
+import { LoginModal } from '../../component/login-modal/LoginModal';
 import './style.css'
 
 export function Login() {

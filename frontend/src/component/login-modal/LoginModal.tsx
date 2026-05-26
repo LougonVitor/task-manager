@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import './style.css'
-import { useLoginAuth } from '../../hook/useLoginAuth';
+import './LoginModal.css'
+import { useLoginAuth } from '../../hook/useLogin';
 import { useNavigate } from 'react-router-dom';
-import { useRegisterAuth } from '../../hook/useRegisterAuth';
-import { ModalValidate } from '../modal-validate-fields';
+import { useRegisterAuth } from '../../hook/useRegister';
+import { ModalValidate } from '../validation-error-banner/ValidationErrorBanner';
 
 interface LoginModalProps {
     isCreateView: boolean;

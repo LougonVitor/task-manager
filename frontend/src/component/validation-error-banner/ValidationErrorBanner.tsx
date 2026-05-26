@@ -1,4 +1,4 @@
-import './style.css';
+import './ValidationErrorBanner.css';
 
 interface ModalValidateProps {
     errors: string[];

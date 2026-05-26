@@ -12,7 +12,11 @@ const updateTask = async (task: Task) => {
         deadline: task.deadline.toISOString().slice(0, 10)
     };
 
-    const response = await axios.put(API_URL + `/${task.id}`, taskRequest);
+    const response = await axios.put(API_URL + `/${task.id}`, taskRequest, {
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
 
     return response;
 };

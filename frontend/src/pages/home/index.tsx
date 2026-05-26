@@ -1,35 +1,15 @@
 import './style.css';
 import { Plus, Search } from 'lucide-react';
-import { useState, useMemo, useEffect } from 'react';
-import { Header } from '../../component/header';
-import { TaskCard } from '../../component/task-card';
-import { TaskModal } from '../../component/task-modal';
+import { useState, useMemo } from 'react';
+import { Header } from '../../component/header/Header';
+import { TaskCard } from '../../component/task-card/TaskCard';
+import { TaskModal } from '../../component/task-modal/TaskModal';
 import type { Task } from '../../interface/task';
-import { useTaskData } from '../../hook/useTaskData';
-import { updateTaskStatus } from '../../hook/useUpdateTaskStatus';
-import { jwtDecode } from 'jwt-decode';
+import { useTaskData } from '../../hook/useGetTasks';
+import { toggleTaskStatus } from '../../hook/useToggleTaskStatus';
 
 export function Home() {
-    const [referenceId, setReferenceId] = useState(0);
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-
-        if (token) {
-            try {
-                // Decode the token payload
-                const decodedToken = jwtDecode(token) as any;
-            
-                // Extract the identifier (e.g., 'sub' or a custom claim like 'userId')
-                const id = decodedToken.userId;
-                setReferenceId(id);
-            } catch (error) {
-                console.error('Failed to decode token:', error);
-            }
-        }
-    }, []);
-
-  const { data, refetch } = useTaskData(referenceId);
+  const { data, refetch } = useTaskData();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,7 +44,7 @@ export function Home() {
 
   const handleStatusToggle = async (id: number) => {
     try {
-      await updateTaskStatus(id);
+      await toggleTaskStatus(id);
       refetch(); // Refresh data after status update
     } catch (error) {
       console.error("Error updating task status:", error);
@@ -166,7 +146,6 @@ export function Home() {
           onClose={() => {setIsModalOpen(false);}}
           isCreateModal={isCreateModal}
           isDeleteModal={isDeleteModal}
-          referenceId={referenceId}
         />
       )}
     </>

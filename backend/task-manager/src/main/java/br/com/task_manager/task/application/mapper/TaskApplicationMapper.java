@@ -2,10 +2,12 @@ package br.com.task_manager.task.application.mapper;
 
 import br.com.task_manager.task.application.dto.CreateTaskCommand;
 import br.com.task_manager.task.application.dto.MutateTaskResponseDto;
+import br.com.task_manager.task.application.dto.TaskApplicationResponseDto;
 import br.com.task_manager.task.domain.entity.TaskEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class TaskApplicationMapper {
@@ -17,14 +19,14 @@ public class TaskApplicationMapper {
      * @param command the command object containing data for the new task
      * @return a fully constructed {@code TaskEntity} ready for business operations
      */
-    public static TaskEntity toEntity(CreateTaskCommand command) {
+    public static TaskEntity toEntity(CreateTaskCommand command, Long userId) {
         return new TaskEntity(
                 command.title(),
                 command.description(),
                 command.status(),
                 LocalDateTime.now(),
                 command.deadline(),
-                command.userId()
+                userId
         );
     }
 
@@ -41,5 +43,9 @@ public class TaskApplicationMapper {
                 entity.getTitle(),
                 entity.getCreatedAt()
         );
+    }
+
+    public static List<TaskApplicationResponseDto> toListOfTaskResponse(List<TaskEntity> entities) {
+        return entities.stream().map(TaskApplicationResponseDto::new).toList();
     }
 }

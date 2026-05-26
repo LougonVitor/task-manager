@@ -31,7 +31,7 @@ public class TokenService {
         }
     }
 
-    public String ValidateToken(String token) {
+    public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
@@ -47,5 +47,16 @@ public class TokenService {
     private Instant genExpirationDate(){
         // Sets the token to expire in 2 hours, adjusted to your timezone (e.g., -3 for Brazil)
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    public Long extractUserId(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+
+        return JWT.require(algorithm)
+                .withIssuer("task-manager")
+                .build()
+                .verify(token)
+                .getClaim("userId")
+                .asLong();
     }
 }

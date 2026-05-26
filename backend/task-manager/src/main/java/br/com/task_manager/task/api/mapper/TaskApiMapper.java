@@ -39,8 +39,7 @@ public class TaskApiMapper {
             request.title(),
             request.description(),
             request.status(),
-            request.deadline(),
-            request.userId());
+            request.deadline());
     }
 
     /**
