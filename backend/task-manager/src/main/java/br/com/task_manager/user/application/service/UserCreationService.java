@@ -30,6 +30,6 @@ public class UserCreationService {
     private void validateUserExistence(String username) {
         Optional<UserEntity> entity = this.userRepository.findByUsername(username);
 
-        if(entity.isEmpty()) throw new UserAlreadyExistsException("User already exists!");
+        if(entity.isPresent()) throw new UserAlreadyExistsException("User already exists!");
     }
 }

@@ -24,6 +24,6 @@ public class UserJpaAdapter implements IUserRepository {
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         Optional<UserJpaEntity> entityFound = this.userJpaRepository.findByUsername(username);
-        return entityFound.map(InfraUserMapper::toOptionalDomainEntity).orElse(null);
+        return entityFound.flatMap(InfraUserMapper::toOptionalDomainEntity);
     }
 }
