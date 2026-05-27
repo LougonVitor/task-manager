@@ -1,24 +1,35 @@
 package br.com.task_manager.user.application.service;
 
-import br.com.task_manager.user.application.dto.CreateUserCommand;
-import br.com.task_manager.user.application.mapper.AuthApplicationMapper;
+import br.com.task_manager.user.application.dto.AppRegisterResponseDto;
+import br.com.task_manager.user.application.dto.AppRegisterUserCommand;
+import br.com.task_manager.user.application.mapper.AppAuthMapper;
+import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.exception.UserAlreadyExistsException;
+import br.com.task_manager.user.domain.exception.UserCreationException;
 import br.com.task_manager.user.domain.repository.IUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserCreationService {
-    @Autowired
-    private IUserRepository userRepository;
+    private final IUserRepository userRepository;
 
-    public String create(CreateUserCommand command) {
-        validateUserExistence(command.username());
+    public UserCreationService(IUserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-        return this.userRepository.create(AuthApplicationMapper.toEntity(command)).getUsername();
+    public AppRegisterResponseDto create(AppRegisterUserCommand command) {
+        this.validateUserExistence(command.username());
+
+        Optional<UserEntity> entity = this.userRepository.create(AppAuthMapper.toDomainEntity(command));
+
+        return entity.map(AppAuthMapper::toAppRegisterResponseDto).orElseThrow(() -> new UserCreationException(command.username()));
     }
 
     private void validateUserExistence(String username) {
-        if(this.userRepository.findByUsername(username) != null) throw new UserAlreadyExistsException("User already exists!");
+        Optional<UserEntity> entity = this.userRepository.findByUsername(username);
+
+        if(entity.isEmpty()) throw new UserAlreadyExistsException("User already exists!");
     }
 }

@@ -5,23 +5,25 @@ import br.com.task_manager.user.domain.valueobject.UserRole;
 import br.com.task_manager.user.infrastructure.entity.UserJpaEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
-public class UserJpaMapper {
+public class InfraUserMapper {
     /**
      * Converts a persistence-level {@link UserJpaEntity} retrieved from the database
-     * into a domain-level {@link UserEntity} used for business operations.
+     * into a domain-level Optional<{@link UserEntity}> used for business operations.
      *
      * @param jpaEntity the JPA entity retrieved from the persistence layer
-     * @return a fully constructed domain {@code UserEntity} containing all domain-level data and transformed role
+     * @return a fully constructed domain Optional<{@code UserEntity}> containing all domain-level data and transformed role
      */
-    public static UserEntity toEntity(UserJpaEntity jpaEntity) {
-        return new UserEntity(
+    public static Optional<UserEntity> toOptionalDomainEntity(UserJpaEntity jpaEntity) {
+        return Optional.of(new UserEntity(
                 jpaEntity.getId(),
                 jpaEntity.getUsername(),
                 jpaEntity.getEmail(),
                 jpaEntity.getPassword(),
                 UserRole.getEnumValue(jpaEntity.getRole()),
                 jpaEntity.getCreatedAt()
-        );
+        ));
     }
 }

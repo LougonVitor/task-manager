@@ -3,26 +3,27 @@ package br.com.task_manager.user.infrastructure.repository;
 import br.com.task_manager.user.domain.entity.UserEntity;
 import br.com.task_manager.user.domain.repository.IUserRepository;
 import br.com.task_manager.user.infrastructure.entity.UserJpaEntity;
-import br.com.task_manager.user.infrastructure.mapper.UserJpaMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.task_manager.user.infrastructure.mapper.InfraUserMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class UserJpaAdapter implements IUserRepository {
-    @Autowired
-    private UserJpaRepository userJpaRepository;
+    private final IUserJpaRepository userJpaRepository;
 
-    @Override
-    public UserEntity create(UserEntity entity) {
-        return UserJpaMapper.toEntity(this.userJpaRepository.save(new UserJpaEntity(entity)));
+    public UserJpaAdapter(IUserJpaRepository userJpaRepository) {
+        this.userJpaRepository = userJpaRepository;
     }
 
     @Override
-    public UserEntity findByUsername(String username) {
-        UserJpaEntity userJpaEntity = this.userJpaRepository.findByUsername(username);
+    public Optional<UserEntity> create(UserEntity entity) {
+        return InfraUserMapper.toOptionalDomainEntity(this.userJpaRepository.save(new UserJpaEntity(entity)));
+    }
 
-        if(userJpaEntity == null) return null;
-
-        return UserJpaMapper.toEntity(userJpaEntity);
+    @Override
+    public Optional<UserEntity> findByUsername(String username) {
+        Optional<UserJpaEntity> entityFound = this.userJpaRepository.findByUsername(username);
+        return entityFound.map(InfraUserMapper::toOptionalDomainEntity).orElse(null);
     }
 }
